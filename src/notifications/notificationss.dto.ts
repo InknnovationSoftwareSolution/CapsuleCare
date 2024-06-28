@@ -1,7 +1,7 @@
 
 export class Updatnotif{
-    shedule: number
-    sent: string
-    type: string
-    message: string
+    shedule?: number
+    sent?: Date
+    type?: string
+    message?: string
 }

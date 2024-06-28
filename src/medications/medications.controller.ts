@@ -17,10 +17,13 @@ export class MedicationsController {
     }
 
     @Get(':id')
-    findMedic(@Param('id', ParseIntPipe) id: number,  @Body() updatU: Updatmedicina){
-        return this.MServ.updateM(id, updatU)    }
+    findMedic(@Param('id', ParseIntPipe) id: number){
+        return this.MServ.findMedicina(id)    
+    }
 
     @Patch(':id')
-    actualizM(@Param('id', ParseIntPipe) id: number){}
+    actualizM(@Param('id', ParseIntPipe) id: number, @Body() updatU: Updatmedicina){
+        return this.MServ.updateM(id, updatU)
+    }
 
 }

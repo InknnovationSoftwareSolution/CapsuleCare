@@ -6,8 +6,6 @@ export class newShed{
 }
 
 export class updatShed{
-    medicina?: number
-    user?: number
     intervalo?: number
     finish_time?: Date
 }
