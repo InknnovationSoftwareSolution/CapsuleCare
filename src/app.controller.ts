@@ -1,12 +1,16 @@
-import { Controller, Get } from '@nestjs/common';
-import { AppService } from './app.service';
+import { Controller, Get, UseGuards } from '@nestjs/common';
+import { JwtAuthGuard } from './auth/jwt-auth.guard';
 
-@Controller()
+@Controller('app')
 export class AppController {
-  constructor(private readonly appService: AppService) {}
+  @UseGuards(JwtAuthGuard)
+  @Get('secure-endpoint')
+  getSecureData() {
+    return "This is a secure data";
+  }
 
-  @Get()
-  getHello(): string {
-    return this.appService.getHello();
+  @Get('public-endpoint')
+  getPublicData() {
+    return "This is public data";
   }
 }
