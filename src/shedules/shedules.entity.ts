@@ -16,14 +16,7 @@ export class Shedules {
     @JoinColumn()
     medicina: Medicina
 
-    @Column()
-    start_time: Date
 
-    @Column()
-    interval_hours: number
-
-    @Column()
-    finish_dose_time:Date
 
     @OneToMany(() => Notifications, notifications => notifications.schedeles)
     @JoinColumn()
