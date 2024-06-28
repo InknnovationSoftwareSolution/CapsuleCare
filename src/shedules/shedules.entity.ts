@@ -28,4 +28,5 @@ export class Shedules {
     @OneToMany(() => Notifications, notifications => notifications.schedeles)
     @JoinColumn()
     notifications: Notifications[]
+    finish_dose_time: Date;
 }
