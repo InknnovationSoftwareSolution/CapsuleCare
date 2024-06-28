@@ -16,7 +16,7 @@ export class Users{
     @Column()
     passw: string
 
-    @Column({type: 'datetime'})
+    @Column()
     create_at: Date
 
     @OneToMany(() => Shedules, shedelus => shedelus.users)
