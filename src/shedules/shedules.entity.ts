@@ -20,7 +20,7 @@ export class Shedules {
     start_time: Date
 
     @Column({type: 'datetime'})
-    interval_hours: Date
+    interval_hours: number
 
     @Column({type: 'datetime'})
     next_dose_time:Date
