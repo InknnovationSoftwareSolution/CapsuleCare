@@ -23,6 +23,6 @@ import { AuthModule } from './auth/auth.module';
     }),
     UsersModule, MedicationsModule, ShedulesModule, NotificationsModule, AuthModule],
   controllers: [AppController],
-  providers: [AppService, MedicationsService],
+  providers: [AppService],
 })
 export class AppModule {}
