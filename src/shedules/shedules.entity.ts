@@ -16,13 +16,13 @@ export class Shedules {
     @JoinColumn()
     medicina: Medicina
 
-    @Column({type: 'datetime2'})
+    @Column({type: 'datetime'})
     start_time: Date
 
-    @Column({type: 'datetime2'})
+    @Column({type: 'datetime'})
     interval_hours: Date
 
-    @Column({type: 'datetime2'})
+    @Column({type: 'datetime'})
     next_dose_time:Date
 
     @OneToMany(() => Notifications, notifications => notifications.schedeles)
