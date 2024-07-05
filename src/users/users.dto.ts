@@ -1,13 +1,11 @@
 export class usersNew{
-    nombre: string
+    userName: string
     email:string
-    passw:string
-    update: Date
+    password:string
 }
 
 export class updateUser{
-    nombre?: string
+    userName?: string
     email?:string
-    passw?:string
-    update: Date
+    password?:string
 }

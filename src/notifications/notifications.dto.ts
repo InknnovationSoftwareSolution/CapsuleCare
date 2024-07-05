@@ -1,6 +1,6 @@
 export class newNotificacion{
     schedule: number
-    sent: number
+    sent: Date
     type: string
-    messange: string
+    message: string
 }

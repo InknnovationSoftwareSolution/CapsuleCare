@@ -1,61 +1,62 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Notifications } from './notifications.entity';
 import { Repository } from 'typeorm';
-import { Updatnotif } from './notificationss.dto';
+import { Notifications } from './notifications.entity';
 import { newNotificacion } from './notifications.dto';
+import { Updatnotif } from './notificationss.dto';
+import { Shedules } from 'src/shedules/shedules.entity';
 
 @Injectable()
 export class NotificationsService {
     constructor(
-        @InjectRepository(Notifications) private readonly NeRepository: Repository<Notifications>
-    ){}
+        @InjectRepository(Notifications) private readonly notificationsRepository: Repository<Notifications>
+    ) {}
 
-    async createN(Notific: newNotificacion){
-        return await this.NeRepository.save(Notific);
+    async createN(notification: newNotificacion){
+        const shedule = new Shedules();
+        shedule.id = notification.schedule;
+
+        const notifi = new Notifications();
+        notifi.schedule = shedule;
+        notifi.message = notification.message;
+        notifi.sentAt = notification.sent;
+        notifi.type = notification.type;
+        return await this.notificationsRepository.save(notifi);
     }
 
-    async findAll(){
-        return this.NeRepository.find({
+    async findAll(): Promise<Notifications[]> {
+        return await this.notificationsRepository.find({
             relations: {
-                schedeles: true
-            }
-        })
+                schedule: true
+            },
+        });
     }
 
-    async findNotification(id){
-        const findN = await this.NeRepository.findOne({
-            where : {id}
+    async findNotification(id: number) {
+        const notification = await this.notificationsRepository.findOne({
+            where: { id },
         });
-        if(!findN){
-            throw new Error('No ahi existencias')
+        if (!notification) {
+            throw new NotFoundException('Notification not found');
         }
-        return findN;
+        return notification;
     }
 
-    async updateN(id: number, noti : Updatnotif){
-        const findN = await this.NeRepository.findOne({
-            where: {
-                id
-            }
-        });
-        if(!findN){
-            throw new Error('no existe')
-        };
-        return this.NeRepository.update(id, noti)
+    async updateN(id: number, updateNotification: Updatnotif) {
+        const result = await this.notificationsRepository.update(id, updateNotification);
+        if (result.affected === 0) {
+            throw new NotFoundException('Notification not found');
+        }
     }
 
     async deleteN(id: number){
-        const findN = await this.NeRepository.findOne({
-            where: {
-                id
-            }
+        const notification = await this.notificationsRepository.findOne({
+            where: { id },
         });
-        if(!findN){
-            throw new Error('no existe')
-        };
-        this.NeRepository.delete(id)
-
-        return "borrado";
+        if (!notification) {
+            throw new NotFoundException('Notification not found');
+        }
+        await this.notificationsRepository.delete(id);
+        return 'Notification deleted';
     }
 }

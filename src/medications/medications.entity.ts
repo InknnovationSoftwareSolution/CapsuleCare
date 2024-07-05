@@ -2,19 +2,18 @@ import { Shedules } from "src/shedules/shedules.entity";
 import { Users } from "src/users/users.entity";
 import { PrimaryGeneratedColumn, Entity, Column, OneToMany, ManyToOne, JoinColumn } from "typeorm";
 
-@Entity({name: 'medicina'})
-export class Medicina{
+@Entity({ name: 'medicina' })
+export class Medicina {
     @PrimaryGeneratedColumn()
-    id: number
+    id: number;
 
     @Column()
-    name:string
+    name: string;
 
-    @ManyToOne(()=> Users,  users=> users.medicina)
-    @JoinColumn()
-    user: Users
+    @ManyToOne(() => Users, users => users.medicina)
+    @JoinColumn({ name: 'user' })
+    user: Users;
 
-    @OneToMany(()=> Shedules, Shedules => Shedules.medicina)
-    @JoinColumn()
-    schedules:Shedules[]
+    @OneToMany(() => Shedules, shedules => shedules.medicina)
+    schedules: Shedules[];
 }

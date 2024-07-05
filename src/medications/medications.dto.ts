@@ -1,4 +1,5 @@
 export class Newmedicina{
+    user: number
     name: string
 }
 
