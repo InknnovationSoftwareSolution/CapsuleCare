@@ -11,8 +11,8 @@ export class NotificationsController {
     constructor(private readonly NServ: NotificationsService) {}
 
     @Post()
-    agregarN(@Body() Notific: newNotificacion): Promise<Notifications>{
-        return this.NServ.createN(Notific);
+    agregarN(@Body() Notific: newNotificacion){
+        return this.NServ.createN(Notific)
     }
 
     @Get()
