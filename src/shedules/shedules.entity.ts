@@ -27,4 +27,5 @@ export class Shedules {
 
     @OneToMany(() => Notifications, notifications => notifications.schedule)
     notifications: Notifications[];
+
 }

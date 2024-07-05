@@ -1,7 +1,9 @@
-import { Body, Controller, Delete, Get, Param, ParseIntPipe, Patch, Post } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, ParseIntPipe, Patch, Post, UseGuards  } from '@nestjs/common';
 import { ShedulesService } from './shedules.service';
 import { newShed, updatShed } from './shedelus.dto';
+import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 
+@UseGuards(JwtAuthGuard)
 @Controller('shedules')
 export class ShedulesController {
     constructor(private readonly shedulesService: ShedulesService) {}

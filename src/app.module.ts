@@ -7,6 +7,7 @@ import { MedicationsModule } from './medications/medications.module';
 import { ShedulesModule } from './shedules/shedules.module';
 import { NotificationsModule } from './notifications/notifications.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
@@ -20,7 +21,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
       entities: [__dirname + '/**/*.entity{.ts,.js}'],
       synchronize: true
     }),
-    UsersModule, MedicationsModule, ShedulesModule, NotificationsModule],
+    UsersModule, MedicationsModule, ShedulesModule, NotificationsModule, AuthModule],
   controllers: [AppController],
   providers: [AppService],
 })
