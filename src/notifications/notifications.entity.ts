@@ -7,7 +7,8 @@ export class Notifications {
     id: number;
 
     @ManyToOne(() => Shedules, (shedules) => shedules.notifications)
-    @JoinColumn({ name: 'schedule_id' }) // Especifica el nombre de la columna de unión
+    @JoinColumn({ name: 'schedule_id' })
+
     schedule: Shedules;
 
     @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })

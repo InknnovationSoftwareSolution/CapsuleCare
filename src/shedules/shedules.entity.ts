@@ -9,11 +9,13 @@ export class Shedules {
     id: number;
 
     @ManyToOne(() => Users, users => users.shedules)
-    @JoinColumn({ name: 'user' }) // Especifica el nombre de la columna de unión
+
+    @JoinColumn({ name: 'user' })
     users: Users;
 
     @ManyToOne(() => Medicina, medicina => medicina.schedules)
-    @JoinColumn({ name: 'medicina' }) // Especifica el nombre de la columna de unión
+    @JoinColumn({ name: 'medicina' })
+
     medicina: Medicina;
 
     @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
