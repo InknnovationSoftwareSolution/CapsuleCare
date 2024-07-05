@@ -3,18 +3,21 @@ import { Users } from "src/users/users.entity";
 import { PrimaryGeneratedColumn, Entity, Column, OneToMany, ManyToOne, JoinColumn } from "typeorm";
 
 @Entity({name: 'medicina'})
-export class Medicina{
+export class Medicina {
     @PrimaryGeneratedColumn()
     id: number
 
     @Column()
-    name:string
+    name: string
 
-    @ManyToOne(()=> Users,  users=> users.medicina)
+    @Column()
+    quantity: number
+
+    @ManyToOne(() => Users, users => users.medicina)
     @JoinColumn()
     user: Users
 
-    @OneToMany(()=> Shedules, Shedules => Shedules.medicina)
+    @OneToMany(() => Shedules, Shedules => Shedules.medicina)
     @JoinColumn()
-    schedules:Shedules[]
+    schedules: Shedules[]
 }
