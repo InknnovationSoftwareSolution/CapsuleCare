@@ -11,7 +11,7 @@ export class Medicina {
     name: string;
 
     @ManyToOne(() => Users, users => users.medicina)
-    @JoinColumn({ name: 'user' })  // Especifica el nombre de la columna de unión
+    @JoinColumn({ name: 'user' })
     user: Users;
 
     @OneToMany(() => Shedules, shedules => shedules.medicina)
