@@ -2,10 +2,11 @@ import { Shedules } from "src/shedules/shedules.entity";
 import { Users } from "src/users/users.entity";
 import { PrimaryGeneratedColumn, Entity, Column, OneToMany, ManyToOne, JoinColumn } from "typeorm";
 
-@Entity({name: 'medicina'})
+
+@Entity({ name: 'medicina' })
 export class Medicina {
     @PrimaryGeneratedColumn()
-    id: number
+    id: number;
 
     @Column()
     name: string
@@ -14,10 +15,10 @@ export class Medicina {
     quantity: number
 
     @ManyToOne(() => Users, users => users.medicina)
-    @JoinColumn()
+    @JoinColumn({ name: 'user' })
     user: Users
 
     @OneToMany(() => Shedules, Shedules => Shedules.medicina)
     @JoinColumn()
-    schedules: Shedules[]
+    schedules: Shedules[]
 }

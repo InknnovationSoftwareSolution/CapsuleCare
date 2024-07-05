@@ -1,33 +1,35 @@
-import { Body, Controller, Delete, Get, Param, ParseIntPipe, Patch, Post } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, ParseIntPipe, Patch, Post, UseGuards  } from '@nestjs/common';
 import { ShedulesService } from './shedules.service';
 import { newShed, updatShed } from './shedelus.dto';
+import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 
+@UseGuards(JwtAuthGuard)
 @Controller('shedules')
 export class ShedulesController {
-    constructor(private readonly SServ: ShedulesService) {}
+    constructor(private readonly shedulesService: ShedulesService) {}
 
     @Post()
-    insert(@Body() User: newShed){
-        return this.SServ.createS(User)
+    create(@Body() newShed: newShed) {
+        return this.shedulesService.createS(newShed);
     }
 
     @Get()
-    Find(){
-        return this.SServ.findAll()
+    findAll() {
+        return this.shedulesService.findAll();
     }
 
     @Get(':id')
-    FindOne(@Param('id', ParseIntPipe) id: number){
-        return this.SServ.findShedules(id)
+    findOne(@Param('id', ParseIntPipe) id: number) {
+        return this.shedulesService.findShedules(id);
     }
 
     // @Patch(':id')
-    // updateUser(@Param('id', ParseIntPipe) id: number,  @Body() updatU: updatShed){
-    //     return this.SServ
+    // update(@Param('id', ParseIntPipe) id: number, @Body() updateShed: updatShed) {
+    //     return this.shedulesService(id, updateShed);
     // }
 
     @Delete(':id')
-    deleteUser(@Param('id', ParseIntPipe) id: number){
-        return this.SServ.deleteS(id)
+    delete(@Param('id', ParseIntPipe) id: number) {
+        return this.shedulesService.deleteS(id);
     }
 }

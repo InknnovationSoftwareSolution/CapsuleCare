@@ -1,16 +1,18 @@
-import { Body, Controller, Delete, Get, Param, ParseIntPipe, Patch, Post } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, ParseIntPipe, Patch, Post, UseGuards } from '@nestjs/common';
 import { NotificationsService } from './notifications.service';
 import { newNotificacion } from './notifications.dto';
 import { Notifications } from './notifications.entity';
 import { Updatnotif } from './notificationss.dto';
+import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 
+@UseGuards(JwtAuthGuard)
 @Controller('notifications')
 export class NotificationsController {
     constructor(private readonly NServ: NotificationsService) {}
 
     @Post()
-    agregarN(@Body() Notific: newNotificacion): Promise<Notifications>{
-        return this.NServ.createN(Notific);
+    agregarN(@Body() Notific: newNotificacion){
+        return this.NServ.createN(Notific)
     }
 
     @Get()

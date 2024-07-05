@@ -1,30 +1,27 @@
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, OneToMany, OneToOne, JoinColumn } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, OneToMany, JoinColumn } from 'typeorm';
 import { Shedules } from '../shedules/shedules.entity';
 import { Medicina } from 'src/medications/medications.entity';
 
 @Entity({ name: 'users' })
-export class Users{
+export class Users {
     @PrimaryGeneratedColumn()
-    id: number
+    id: number;
 
     @Column()
-    userName: string
+    userName: string;
 
-    @Column({unique: true})
-    email: string
-
-    @Column()
-    passw: string
+    @Column({ unique: true })
+    email: string;
 
     @Column()
-    create_at: Date
+    password: string;
 
-    @OneToMany(() => Shedules, shedelus => shedelus.users)
-    @JoinColumn()
-    shedules: Shedules[]
-   
+    @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
+    createdAt: Date;
+
+    @OneToMany(() => Shedules, shedules => shedules.users)
+    shedules: Shedules[];
+
     @OneToMany(() => Medicina, medicina => medicina.user)
-    @JoinColumn()
-    medicina: Medicina[]
-
+    medicina: Medicina[];
 }
