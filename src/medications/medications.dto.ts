@@ -2,6 +2,8 @@
 export class Newmedicina {
     name: string;
     quantity: number;
+    user: number;
+
   }
   
   export class Updatmedicina {
