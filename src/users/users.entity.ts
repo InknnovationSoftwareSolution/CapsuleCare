@@ -14,10 +14,12 @@ export class Users {
     email: string;
 
     @Column()
+
     password: string;
 
     @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
     createdAt: Date;
+
 
     @OneToMany(() => Shedules, shedules => shedules.users)
     shedules: Shedules[];

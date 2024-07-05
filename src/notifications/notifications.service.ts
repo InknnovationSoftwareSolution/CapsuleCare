@@ -12,7 +12,9 @@ export class NotificationsService {
         @InjectRepository(Notifications) private readonly notificationsRepository: Repository<Notifications>
     ) {}
 
+
     async createN(notification: newNotificacion) {
+
         const shedule = new Shedules();
         shedule.id = notification.schedule;
 
@@ -43,6 +45,7 @@ export class NotificationsService {
     }
 
     async updateN(id: number, updateNotification: Updatnotif) {
+
         const notification = await this.notificationsRepository.findOne({ where: { id } });
         if (!notification) {
             throw new NotFoundException('Notification not found');
@@ -71,6 +74,7 @@ export class NotificationsService {
 
     async deleteN(id: number) {
         const notification = await this.notificationsRepository.findOne({ where: { id } });
+
         if (!notification) {
             throw new NotFoundException('Notification not found');
         }

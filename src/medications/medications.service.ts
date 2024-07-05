@@ -1,4 +1,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
+
+import { Medicina } from './medications.entity';
+
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Medicina } from './medications.entity';
@@ -8,9 +11,11 @@ import { Users } from 'src/users/users.entity';
 @Injectable()
 export class MedicationsService {
     constructor(
+
         @InjectRepository(Medicina)
         private readonly MRepository: Repository<Medicina>,
     ) {}
+
 
     async createM(medicina: Newmedicina): Promise<Medicina> {
         const user = new Users();
@@ -18,7 +23,9 @@ export class MedicationsService {
         
         const med = new Medicina();
         med.name = medicina.name;
-        med.quantity = medicina.quantity;  // Asegúrate de asignar el valor de quantity
+
+        med.quantity = medicina.quantity; 
+
         med.user = user;
         return await this.MRepository.save(med);
     }

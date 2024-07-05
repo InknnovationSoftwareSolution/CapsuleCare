@@ -9,11 +9,13 @@ export class Shedules {
     id: number;
 
     @ManyToOne(() => Users, users => users.shedules)
+
     @JoinColumn({ name: 'user' })
     users: Users;
 
     @ManyToOne(() => Medicina, medicina => medicina.schedules)
     @JoinColumn({ name: 'medicina' })
+
     medicina: Medicina;
 
     @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
@@ -27,4 +29,5 @@ export class Shedules {
 
     @OneToMany(() => Notifications, notifications => notifications.schedule)
     notifications: Notifications[];
+
 }

@@ -3,6 +3,7 @@ import { Users } from "src/users/users.entity";
 import { PrimaryGeneratedColumn, Entity, Column, OneToMany, ManyToOne, JoinColumn } from "typeorm";
 
 
+
 @Entity({ name: 'medicina' })
 export class Medicina {
     @PrimaryGeneratedColumn()
@@ -22,6 +23,5 @@ export class Medicina {
     @JoinColumn()
     schedules:Shedules[]
 }
-
 
 

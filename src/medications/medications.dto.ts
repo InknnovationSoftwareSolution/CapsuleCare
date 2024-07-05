@@ -1,4 +1,5 @@
 
+
 export class Newmedicina {
     name: string;
     quantity: number;
