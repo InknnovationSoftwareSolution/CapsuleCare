@@ -3,12 +3,41 @@ import { Repository } from 'typeorm';
 import { Users } from './users.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { updateUser, usersNew } from './users.dto';
+import * as bcrypt from 'bcrypt';
+import { AuthService } from '../auth/auth.service';
+import { LoginUserDto } from '../auth/dto/login-user.dto';
 
 @Injectable()
 export class UsersService {
     constructor(
         @InjectRepository(Users) private readonly userRepository: Repository<Users>,
+        private authService: AuthService,
     ) {}
+
+    async register(user: usersNew): Promise<any> {
+        const hashedPassword = await bcrypt.hash(user.password, 10);
+        const newUser = this.userRepository.create({
+            ...user,
+            password: hashedPassword,
+        });
+        await this.userRepository.save(newUser);
+        const payload = { email: newUser.email, sub: newUser.id };
+        return {
+            access_token: this.authService.generateToken(payload),
+        };
+    }
+
+    async login(loginUserDto: LoginUserDto): Promise<any> {
+        const { email, password } = loginUserDto;
+        const user = await this.userRepository.findOne({ where: { email } });
+        if (user && await bcrypt.compare(password, user.password)) {
+            const payload = { email: user.email, sub: user.id };
+            return {
+                access_token: this.authService.generateToken(payload),
+            };
+        }
+        throw new Error('Las credenciales no coinciden');
+    }
 
     async agregarUser(user: usersNew): Promise<Users> {
         return await this.userRepository.save(user);
