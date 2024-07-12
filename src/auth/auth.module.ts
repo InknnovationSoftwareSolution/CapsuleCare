@@ -4,12 +4,12 @@ import { JwtModule } from '@nestjs/jwt';
 import { PassportModule } from '@nestjs/passport';
 import { AuthService } from './auth.service';
 import { AuthController } from './auth.controller';
-import { Users } from '../users/users.entity'; // Asegúrate de importar la entidad Users
+import { Users } from '../users/users.entity'; 
 import { JwtStrategy } from './jwt.strategy';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([Users]), // Añadir Users aquí
+    TypeOrmModule.forFeature([Users]), 
     PassportModule,
     JwtModule.register({
       secret: 'secretKey',
@@ -18,6 +18,6 @@ import { JwtStrategy } from './jwt.strategy';
   ],
   providers: [AuthService, JwtStrategy],
   controllers: [AuthController],
-  exports: [AuthService], // Exportar AuthService si es necesario
+  exports: [AuthService], 
 })
 export class AuthModule {}

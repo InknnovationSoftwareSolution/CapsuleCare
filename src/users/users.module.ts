@@ -11,7 +11,7 @@ import { AuthModule } from '../auth/auth.module';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([Users]), // Añadir User aquí
+    TypeOrmModule.forFeature([Users]), 
     PassportModule,AuthModule,
     JwtModule.register({
       secret: 'secretKey',
