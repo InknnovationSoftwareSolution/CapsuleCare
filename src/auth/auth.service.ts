@@ -3,15 +3,15 @@ import { JwtService } from '@nestjs/jwt';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import * as bcrypt from 'bcrypt';
-import { User } from './user.entity';
+import { Users } from '../users/users.entity'; // Asegúrate de importar la entidad Users
 import { CreateUserDto } from './dto/create-user.dto';
 import { LoginUserDto } from './dto/login-user.dto';
 
 @Injectable()
 export class AuthService {
   constructor(
-    @InjectRepository(User)
-    private usersRepository: Repository<User>,
+    @InjectRepository(Users)
+    private usersRepository: Repository<Users>,
     private jwtService: JwtService
   ) {}
 
@@ -19,10 +19,9 @@ export class AuthService {
     const { name, email, password } = createUserDto;
     const hashedPassword = await bcrypt.hash(password, 10);
     const user = this.usersRepository.create({
-      name,
+      userName: name,
       email,
       password: hashedPassword,
-      active: true,
     });
     await this.usersRepository.save(user);
     const payload = { email: user.email, sub: user.id };
@@ -50,5 +49,9 @@ export class AuthService {
       return result;
     }
     return null;
+  }
+
+  generateToken(payload: any): string {
+    return this.jwtService.sign(payload);
   }
 }
