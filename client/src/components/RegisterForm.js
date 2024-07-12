@@ -1,6 +1,7 @@
-// client/src/components/RegisterForm.js
+
 import React, { useState } from 'react';
 import axios from 'axios';
+import './RegisterForm.css'; 
 
 const RegisterForm = () => {
   const [name, setName] = useState('');
@@ -10,7 +11,7 @@ const RegisterForm = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post('http://localhost:3000/auth/register', {
+      const response = await axios.post('http://localhost:3000/users/register', {
         name,
         email,
         password,
@@ -18,15 +19,16 @@ const RegisterForm = () => {
       console.log(response.data);
       alert('Registration successful');
     } catch (error) {
-      console.error('Error registering user', error);
-      alert('Registration failed');
+      console.error('Error', error);
+      alert('Registro fallido');
     }
   };
 
   return (
-    <form onSubmit={handleSubmit}>
+    <form className="register-form" onSubmit={handleSubmit}>
+      <h2>Registro de usuarios</h2>
       <div>
-        <label>Name:</label>
+        <label>Nombre:</label>
         <input
           type="text"
           value={name}
@@ -44,7 +46,7 @@ const RegisterForm = () => {
         />
       </div>
       <div>
-        <label>Password:</label>
+        <label>Contraseña:</label>
         <input
           type="password"
           value={password}
@@ -52,7 +54,7 @@ const RegisterForm = () => {
           required
         />
       </div>
-      <button type="submit">Register</button>
+      <button type="submit">Registrar</button>
     </form>
   );
 };
