@@ -21,9 +21,15 @@ export class UsersService {
             password: hashedPassword,
         });
         await this.userRepository.save(newUser);
+        
+        // Generate access token
         const payload = { email: newUser.email, sub: newUser.id };
+        const accessToken = this.authService.generateToken(payload);
+
+        // Return both access token and user data
         return {
-            access_token: this.authService.generateToken(payload),
+            access_token: accessToken,
+            user: newUser,
         };
     }
 
@@ -32,8 +38,9 @@ export class UsersService {
         const user = await this.userRepository.findOne({ where: { email } });
         if (user && await bcrypt.compare(password, user.password)) {
             const payload = { email: user.email, sub: user.id };
+            const accessToken = this.authService.generateToken(payload);
             return {
-                access_token: this.authService.generateToken(payload),
+                access_token: accessToken,
             };
         }
         throw new Error('Las credenciales no coinciden');
