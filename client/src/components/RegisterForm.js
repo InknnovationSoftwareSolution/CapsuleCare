@@ -4,7 +4,7 @@ import axios from 'axios';
 import './RegisterForm.css'; 
 
 const RegisterForm = () => {
-  const [name, setName] = useState('');
+  const [userName, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
@@ -12,7 +12,7 @@ const RegisterForm = () => {
     e.preventDefault();
     try {
       const response = await axios.post('http://localhost:3000/users/register', {
-        name,
+        userName,
         email,
         password,
       });
@@ -31,7 +31,7 @@ const RegisterForm = () => {
         <label>Nombre:</label>
         <input
           type="text"
-          value={name}
+          value={userName}
           onChange={(e) => setName(e.target.value)}
           required
         />

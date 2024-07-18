@@ -9,8 +9,9 @@ export class UsersController {
     constructor(private readonly UsersServ: UsersService) {}
 
     @Post('register')
-    register(@Body() User: usersNew) {
-        return this.UsersServ.register(User);
+    async register(@Body() user: usersNew) {
+        const registrationResult = await this.UsersServ.register(user);
+        return registrationResult;
     }
 
     @Post('login')

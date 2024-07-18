@@ -1,7 +1,4 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-
-
-
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Medicina } from './medications.entity';
@@ -28,6 +25,7 @@ export class MedicationsService {
 
         med.user = user;
         return await this.MRepository.save(med);
+        
     }
 
     async findAll(): Promise<Medicina[]> {
