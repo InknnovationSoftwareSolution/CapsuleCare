@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import { toast, ToastContainer } from 'react-toastify'; // Importa ToastContainer
-import { useNavigate } from 'react-router-dom'; 
-import 'react-toastify/dist/ReactToastify.css'; 
+import { toast, ToastContainer } from 'react-toastify';
+import { useNavigate } from 'react-router-dom';
+import 'react-toastify/dist/ReactToastify.css';
 
 const LoginForm = ({ onLogin }) => {
   const [email, setEmail] = useState('');
@@ -44,10 +44,16 @@ const LoginForm = ({ onLogin }) => {
         password,
       });
 
-      localStorage.setItem('accessToken', response.data.access_token);
-      onLogin(response.data.user);
-      toast.success('Inicio de sesión exitoso');
-      navigate('/userpage.js'); 
+      console.log('Response Data:', response.data);
+
+      if (response.data.access_token && response.data.user) {
+        localStorage.setItem('accessToken', response.data.access_token);
+        onLogin(response.data.user);
+        toast.success('Inicio de sesión exitoso');
+        navigate('/userpage');
+      } else {
+        toast.error('Error en la respuesta del servidor');
+      }
     } catch (error) {
       if (error.response) {
         if (error.response.status === 401) {
@@ -63,7 +69,7 @@ const LoginForm = ({ onLogin }) => {
 
   return (
     <div className="min-h-screen flex flex-col justify-center items-center bg-gray-100 p-4">
-      <ToastContainer /> {}
+      <ToastContainer />
       <h2 className="text-xl font-bold mb-2">INICIO DE SESIÓN</h2>
       <p className="mb-6">Ingresa tus datos para acceder</p>
       <form className="bg-white p-6 rounded-lg shadow-md w-full max-w-xs" onSubmit={handleSubmit}>

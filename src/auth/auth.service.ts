@@ -1,9 +1,9 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import * as bcrypt from 'bcrypt';
-import { Users } from '../users/users.entity'; 
+import { Users } from '../users/users.entity';
 import { CreateUserDto } from './dto/create-user.dto';
 import { LoginUserDto } from './dto/login-user.dto';
 
@@ -27,6 +27,7 @@ export class AuthService {
     const payload = { email: user.email, sub: user.id };
     return {
       access_token: this.jwtService.sign(payload),
+      user,
     };
   }
 
@@ -37,9 +38,15 @@ export class AuthService {
       const payload = { email: user.email, sub: user.id };
       return {
         access_token: this.jwtService.sign(payload),
+        user: {
+          id: user.id,
+          userName: user.userName,
+          email: user.email,
+          createdAt: user.createdAt,
+        },
       };
     }
-    throw new Error('Las credenciales no coinciden');
+    throw new UnauthorizedException('Las credenciales no coinciden');
   }
 
   async validateUser(email: string, password: string): Promise<any> {

@@ -9,6 +9,7 @@ import { LoginUserDto } from '../auth/dto/login-user.dto';
 
 @Injectable()
 export class UsersService {
+    
     constructor(
         @InjectRepository(Users) private readonly userRepository: Repository<Users>,
         private authService: AuthService,
@@ -88,4 +89,8 @@ export class UsersService {
         await this.userRepository.delete(id);
         return 'User deleted';
     }
+
+    async findById(id: number): Promise<Users> {
+        return this.userRepository.findOne({ where: { id } });
+      }
 }
