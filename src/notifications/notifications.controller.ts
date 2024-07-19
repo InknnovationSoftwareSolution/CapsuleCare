@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Param, ParseIntPipe, Patch, Post, UseGuards } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, ParseIntPipe, Patch, Post, UseGuards, HttpException, HttpStatus } from '@nestjs/common';
 import { NotificationsService } from './notifications.service';
 import { newNotificacion } from './notifications.dto';
 import { Updatnotif } from './notificationss.dto';
@@ -10,29 +10,83 @@ export class NotificationsController {
     constructor(private readonly NServ: NotificationsService) {}
 
     @Post()
-
-    agregarN(@Body() Notific: newNotificacion) {
-        return this.NServ.createN(Notific);
-
+    async agregarN(@Body() Notific: newNotificacion) {
+        try {
+            return await this.NServ.createN(Notific);
+        } catch (error) {
+            throw new HttpException({
+                status: HttpStatus.BAD_REQUEST,
+                error: 'Error adding notification',
+            }, HttpStatus.BAD_REQUEST);
+        }
     }
 
     @Get()
-    getAll() {
-        return this.NServ.findAll();
+    async getAll() {
+        try {
+            return await this.NServ.findAll();
+        } catch (error) {
+            throw new HttpException({
+                status: HttpStatus.INTERNAL_SERVER_ERROR,
+                error: 'Error retrieving notifications',
+            }, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
     @Get(':id')
-    findNotif(@Param('id', ParseIntPipe) id: number) {
-        return this.NServ.findNotification(id);
+    async findNotif(@Param('id', ParseIntPipe) id: number) {
+        try {
+            const notification = await this.NServ.findNotification(id);
+            if (!notification) {
+                throw new HttpException({
+                    status: HttpStatus.NOT_FOUND,
+                    error: 'Notification not found',
+                }, HttpStatus.NOT_FOUND);
+            }
+            return notification;
+        } catch (error) {
+            throw new HttpException({
+                status: HttpStatus.INTERNAL_SERVER_ERROR,
+                error: 'Error retrieving notification',
+            }, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
     @Patch(':id')
-    actualizN(@Param('id', ParseIntPipe) id: number, @Body() updatU: Updatnotif) {
-        return this.NServ.updateN(id, updatU);
+    async actualizN(@Param('id', ParseIntPipe) id: number, @Body() updatU: Updatnotif) {
+        try {
+            const updated = await this.NServ.updateN(id, updatU);
+            if (!updated) {
+                throw new HttpException({
+                    status: HttpStatus.NOT_FOUND,
+                    error: 'Notification not found for update',
+                }, HttpStatus.NOT_FOUND);
+            }
+            return updated;
+        } catch (error) {
+            throw new HttpException({
+                status: HttpStatus.INTERNAL_SERVER_ERROR,
+                error: 'Error updating notification',
+            }, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
     @Delete(':id')
-    deletNotif(@Param('id', ParseIntPipe) id: number) {
-        return this.NServ.deleteN(id);
+    async deletNotif(@Param('id', ParseIntPipe) id: number) {
+        try {
+            const deleted = await this.NServ.deleteN(id);
+            if (!deleted) {
+                throw new HttpException({
+                    status: HttpStatus.NOT_FOUND,
+                    error: 'Notification not found for deletion',
+                }, HttpStatus.NOT_FOUND);
+            }
+            return { message: 'Notification deleted successfully' };
+        } catch (error) {
+            throw new HttpException({
+                status: HttpStatus.INTERNAL_SERVER_ERROR,
+                error: 'Error deleting notification',
+            }, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 }
