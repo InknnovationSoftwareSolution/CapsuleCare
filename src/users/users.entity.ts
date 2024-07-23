@@ -1,6 +1,7 @@
 import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, OneToMany, JoinColumn } from 'typeorm';
 import { Shedules } from '../shedules/shedules.entity';
-import { Medicina } from 'src/medications/medications.entity';
+import { Medicina } from '../medications/medications.entity';
+
 
 @Entity({ name: 'users' })
 export class Users {
@@ -20,8 +21,10 @@ export class Users {
     createdAt: Date;
 
     @OneToMany(() => Shedules, shedules => shedules.users)
+    @JoinColumn()
     shedules: Shedules[];
 
     @OneToMany(() => Medicina, medicina => medicina.user)
+
     medicina: Medicina[];
 }

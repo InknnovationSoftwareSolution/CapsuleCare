@@ -2,6 +2,7 @@ import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { UsersModule } from './users/users.module';
+import { ConfigModule } from '@nestjs/config';
 import { MedicationsService } from './medications/medications.service';
 import { MedicationsModule } from './medications/medications.module';
 import { ShedulesModule } from './shedules/shedules.module';
@@ -10,6 +11,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 
 @Module({
   imports: [
+    ConfigModule.forRoot({isGlobal: true}),
     TypeOrmModule.forRoot({
       type: 'mysql',
       host: 'localhost',

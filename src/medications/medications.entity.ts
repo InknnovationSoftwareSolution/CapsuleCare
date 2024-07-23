@@ -1,6 +1,6 @@
-import { Shedules } from "src/shedules/shedules.entity";
-import { Users } from "src/users/users.entity";
 import { PrimaryGeneratedColumn, Entity, Column, OneToMany, ManyToOne, JoinColumn } from "typeorm";
+import { Shedules } from "../shedules/shedules.entity";
+import { Users } from "../users/users.entity";
 
 @Entity({ name: 'medicina' })
 export class Medicina {
@@ -9,6 +9,9 @@ export class Medicina {
 
     @Column()
     name: string;
+
+    @Column()
+    dosis: number
 
     @ManyToOne(() => Users, users => users.medicina)
     @JoinColumn({ name: 'user' })

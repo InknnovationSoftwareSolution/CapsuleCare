@@ -3,7 +3,7 @@ import { Medicina } from './medications.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Newmedicina, Updatmedicina } from './medications.dto';
-import { Users } from 'src/users/users.entity';
+import { Users } from '../users/users.entity';
 
 @Injectable()
 export class MedicationsService {
@@ -19,6 +19,7 @@ export class MedicationsService {
         const med = new Medicina();
         med.name = medicina.name;
         med.user = user;
+        med.dosis = medicina.dosis;
         return await this.MRepository.save(med);
     }
 
@@ -29,7 +30,10 @@ export class MedicationsService {
     async findMedicina(id: number): Promise<Medicina> {
         const medicina = await this.MRepository.findOne({
             where: { id },
-            relations: ['user', 'schedules'],
+            relations: {
+                user: true,
+                schedules: true
+            }//['user', 'schedules'],
         });
         if (!medicina) {
             throw new NotFoundException(`Medicina with id ${id} not found`);

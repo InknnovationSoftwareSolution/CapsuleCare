@@ -21,10 +21,10 @@ export class ShedulesController {
         return this.shedulesService.findShedules(id);
     }
 
-    // @Patch(':id')
-    // update(@Param('id', ParseIntPipe) id: number, @Body() updateShed: updatShed) {
-    //     return this.shedulesService(id, updateShed);
-    // }
+    @Patch(':id')
+    update(@Param('id', ParseIntPipe) id: number, @Body() updateShed: updatShed) {
+        return this.shedulesService.updateS(id, updateShed);
+    }
 
     @Delete(':id')
     delete(@Param('id', ParseIntPipe) id: number) {

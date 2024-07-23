@@ -3,8 +3,8 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Shedules } from './shedules.entity';
 import { newShed, updatShed } from './shedelus.dto';
-import { Medicina } from 'src/medications/medications.entity';
-import { Users } from 'src/users/users.entity';
+import { Medicina } from '../medications/medications.entity';
+import { Users } from '../users/users.entity';
 
 @Injectable()
 export class ShedulesService {
@@ -46,12 +46,18 @@ export class ShedulesService {
         return shedules;
     }
 
-    // async updateS(id: number, shed: updatShed) {
-    //     const updateResult = await this.sRepository.update(id, shed);
-    //     if (updateResult.affected === 0) {
-    //         throw new NotFoundException(`Shedules with id ${id} not found`);
-    //     }
-    // }
+    async updateS(id: number, shed: updatShed) {
+
+        const shedul = this.sRepository.create({
+            interval_hours: shed.intervalo,
+            finish_dose_time: shed.finish_time,
+        });
+
+        const updateResult = await this.sRepository.update(id, shedul);
+        if (updateResult.affected === 0) {
+            throw new NotFoundException(`Shedules with id ${id} not found`);
+        }
+    }
 
     async deleteS(id: number): Promise<string> {
         const shedules = await this.sRepository.findOne({ where: { id } });
