@@ -9,6 +9,7 @@ import { LoginUserDto } from '../auth/dto/login-user.dto';
 
 @Injectable()
 export class UsersService {
+    
     constructor(
         @InjectRepository(Users) private readonly userRepository: Repository<Users>,
         private authService: AuthService,
@@ -116,4 +117,8 @@ export class UsersService {
             throw new BadRequestException('Error al eliminar el usuario');
         }
     }
+
+    async findById(id: number): Promise<Users> {
+        return this.userRepository.findOne({ where: { id } });
+      }
 }
