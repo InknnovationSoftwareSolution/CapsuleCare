@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
 import RegisterForm from './components/RegisterForm';
 import LoginForm from './components/LoginForm';
-import UserPage from './components/UserPage';
 import 'react-toastify/dist/ReactToastify.css';
 
 const App = () => {
