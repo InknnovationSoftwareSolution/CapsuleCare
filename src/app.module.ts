@@ -12,14 +12,14 @@ import { AuthModule } from './auth/auth.module';
 @Module({
   imports: [
     TypeOrmModule.forRoot({
-      type: 'mysql',
-      host: 'localhost',
-      port: 3306,
-      username: 'admin',
-      password: 'admin',
-      database: 'integradora',
-      entities: [__dirname + '/**/*.entity{.ts,.js}'],
-      synchronize: true
+  "type": "mysql",
+  "host": process.env.DATABASE_HOST,
+  "port": parseInt(process.env.DATABASE_PORT),
+  "username": process.env.DATABASE_USER,
+  "password": process.env.DATABASE_PASSWORD,
+  "database": process.env.DATABASE_NAME,
+  "entities": ["dist/**/*.entity.js"],
+  "synchronize": true
     }),
     UsersModule, MedicationsModule, ShedulesModule, NotificationsModule, AuthModule],
   controllers: [AppController],
