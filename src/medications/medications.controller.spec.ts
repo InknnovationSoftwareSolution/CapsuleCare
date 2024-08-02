@@ -53,7 +53,8 @@ describe('UsersController', () => {
     it('should create a new user', async () => {
       const dto = {
         user: 1,
-        name: "Prueba 1"
+        name: "Prueba 1",
+        dosis: 1
     };
       const result = await controller.agregarM(dto);
       expect(result).toEqual(new Medicina());
