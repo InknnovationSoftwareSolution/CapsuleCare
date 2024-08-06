@@ -1,5 +1,5 @@
-import { Shedules } from "src/shedules/shedules.entity";
-import { Users } from "src/users/users.entity";
+import { Shedules } from "../shedules/shedules.entity";
+import { Users } from "../users/users.entity";
 import { PrimaryGeneratedColumn, Entity, Column, OneToMany, ManyToOne, JoinColumn } from "typeorm";
 
 
@@ -21,7 +21,7 @@ export class Medicina {
 
     @OneToMany(() => Shedules, Shedules => Shedules.medicina)
     @JoinColumn()
-    schedules:Shedules[]
+    shedules:Shedules[]
 }
 
 

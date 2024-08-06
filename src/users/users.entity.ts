@@ -1,6 +1,6 @@
 import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from 'typeorm';
 import { Shedules } from '../shedules/shedules.entity';
-import { Medicina } from 'src/medications/medications.entity';
+import { Medicina } from '../medications/medications.entity';
 
 @Entity({ name: 'users' })
 export class Users {
