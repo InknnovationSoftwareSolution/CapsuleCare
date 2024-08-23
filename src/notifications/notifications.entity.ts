@@ -1,25 +1,32 @@
-import { Shedules } from 'src/shedules/shedules.entity';
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, OneToMany, OneToOne, JoinColumn } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, JoinColumn, OneToMany } from 'typeorm';
+import { Shedules } from '../shedules/shedules.entity';
+import { ApiProperty } from '@nestjs/swagger';
 
-@Entity({name: 'notification'})
-export class Notifications{
+@Entity({ name: 'notifications' })
+export class Notifications {
 
+    @ApiProperty({ description: 'ID unico de la notificacion' })
     @PrimaryGeneratedColumn()
-    id: number
+    id: number;
 
-    @ManyToOne(() => Shedules, shedules => shedules.notifications)
-    @JoinColumn()
-    schedeles: Shedules
+    @ApiProperty({ description: 'ID unico de la alarma de su notificacion', required: true })
+    @ManyToOne(() => Shedules, (shedules) => shedules.notifications)
+    @JoinColumn({ name: 'schedule_id' })
+    schedule: Shedules;
 
+    @ApiProperty({ description: 'Fecha de la notificacion', required: true })
+    @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
+    sentAt: Date;
+
+    @ApiProperty({ description: 'El tipo de medicamento', required: true })
     @Column()
-    sent_at: string
+    type: string;
 
+    @ApiProperty({ description: 'Instruccion del medicamento', required: true })
     @Column()
-    type: string
+    message: string;
 
-    @Column()
-    message: string
-
-    @Column()
-    created_at: Date
+    @ApiProperty({ description: 'Cuando se crea la notificacion' })
+    @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
+    createdAt: Date;
 }

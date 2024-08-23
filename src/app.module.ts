@@ -2,7 +2,7 @@ import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { UsersModule } from './users/users.module';
-import { MedicationsService } from './medications/medications.service';
+import { ConfigModule } from '@nestjs/config';
 import { MedicationsModule } from './medications/medications.module';
 import { ShedulesModule } from './shedules/shedules.module';
 import { NotificationsModule } from './notifications/notifications.module';
@@ -11,18 +11,29 @@ import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
+    ConfigModule.forRoot({ isGlobal: true }),
     TypeOrmModule.forRoot({
-  "type": "mysql",
-  "host": process.env.DATABASE_HOST,
-  "port": parseInt(process.env.DATABASE_PORT),
-  "username": process.env.DATABASE_USER,
-  "password": process.env.DATABASE_PASSWORD,
-  "database": process.env.DATABASE_NAME,
-  "entities": ["dist/**/*.entity.js"],
-  "synchronize": true
+      type: 'mysql',
+      host: 'localhost',
+      port: 3306,
+      username: 'root',
+      password: '',
+      database: 'integradora',
+      entities: [__dirname + '/**/*.entity{.ts,.js}'],
+      synchronize: true,
     }),
-    UsersModule, MedicationsModule, ShedulesModule, NotificationsModule, AuthModule],
+    UsersModule, MedicationsModule, ShedulesModule, NotificationsModule,AuthModule],
   controllers: [AppController],
   providers: [AppService],
 })
 export class AppModule {}
+
+// type: "postgres",
+// host: "localhost",
+// port: 5432,
+// username: "test",
+// password: "test",
+// database: "test",
+// entities: [
+//     // ....
+// ],

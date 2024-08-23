@@ -1,19 +1,37 @@
-import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, OneToMany, JoinColumn } from 'typeorm';
+import { Shedules } from '../shedules/shedules.entity';
+import { Medicina } from '../medications/medications.entity';
+import { ApiProperty } from '@nestjs/swagger';
 
-@Entity()
-export class User {
-  @PrimaryGeneratedColumn()
-  id: number;
+@Entity({ name: 'users' })
+export class Users {
 
-  @Column()
-  name: string;
+    @ApiProperty({ description: 'ID unico del usuario' })
+    @PrimaryGeneratedColumn()
+    id: number;
 
-  @Column({ unique: true })
-  email: string;
+    @ApiProperty({ description: 'Nombre del usuario', required: true })
+    @Column()
+    userName: string;
 
-  @Column()
-  password: string;
+    @ApiProperty({ description: 'Correo del usuario', required: true })
+    @Column({ unique: true })
+    email: string;
 
-  @Column({ default: true })
-  active: boolean;
+    @ApiProperty({ description: 'Clave del usuario', required: true })
+    @Column()
+    password: string;
+
+    @ApiProperty({ description: 'Fecha de registro' })
+    @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
+    createdAt: Date;
+
+    @ApiProperty({ description: 'Lista de alarmas del usuario' })
+    @OneToMany(() => Shedules, shedules => shedules.users)
+    @JoinColumn()
+    shedules: Shedules[];
+
+    @ApiProperty({ description: 'Lista de medicinas del usuario' })
+    @OneToMany(() => Medicina, medicina => medicina.user)
+    medicina: Medicina[];
 }

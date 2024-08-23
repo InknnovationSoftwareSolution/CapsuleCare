@@ -1,61 +1,92 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Notifications } from './notifications.entity';
 import { Repository } from 'typeorm';
-import { Updatnotif } from './notificationss.dto';
+import { Notifications } from './notifications.entity';
 import { newNotificacion } from './notifications.dto';
+import { Updatnotif } from './notificationss.dto';
+import { Shedules } from '../shedules/shedules.entity';
 
 @Injectable()
 export class NotificationsService {
     constructor(
-        @InjectRepository(Notifications) private readonly NeRepository: Repository<Notifications>
-    ){}
+        @InjectRepository(Notifications) private readonly notificationsRepository: Repository<Notifications>
+    ) {}
 
-    async createN(Notific: newNotificacion){
-        return await this.NeRepository.save(Notific);
+
+  /**
+   * Crea una nueva notificacion.
+   * @param notification - Objeto o modelo de datos para la base de datos.
+   * @return Regresa la informacion de la notificacion.
+   */
+    async createN(notification: newNotificacion){
+        const shedule = new Shedules();
+        shedule.id = notification.schedule;
+
+        const notifi = new Notifications();
+        notifi.schedule = shedule;
+        notifi.message = notification.message;
+        notifi.sentAt = notification.sent;
+        notifi.type = notification.type;
+        return await this.notificationsRepository.save(notifi);
     }
 
-    async findAll(){
-        return this.NeRepository.find({
+
+/**
+   * Muestra una lista de notificaciones con relacion join con shedules
+   * @returns Retorna toda la lsita de notificaciones
+   */
+    async findAll(): Promise<Notifications[]> {
+        return await this.notificationsRepository.find({
             relations: {
-                schedeles: true
-            }
-        })
+                schedule: true
+            },
+        });
     }
 
-    async findNotification(id){
-        const findN = await this.NeRepository.findOne({
-            where : {id}
+
+/**
+   * Busqueda por ID en la tabla notificaciones
+   * @param id - Id unico de una notificacion.
+   * @return Retorna la notificacion buscado por ID
+   */
+    async findNotification(id: number) {
+        const notification = await this.notificationsRepository.findOne({
+            where: { id },
         });
-        if(!findN){
-            throw new Error('No ahi existencias')
+        if (!notification) {
+            throw new NotFoundException('Notification not found');
         }
-        return findN;
+        return notification;
     }
 
-    async updateN(id: number, noti : Updatnotif){
-        const findN = await this.NeRepository.findOne({
-            where: {
-                id
-            }
-        });
-        if(!findN){
-            throw new Error('no existe')
-        };
-        return this.NeRepository.update(id, noti)
+
+/**
+   * Actualiza notificacion por ID
+   * @param id - The ID of the user.
+   * @param updateNotification - Objeto o modelo de datos para la base de datos.
+   * @return Regresa la respuesta de si fue afectada la fila
+   */
+    async updateN(id: number, updateNotification: Updatnotif) {
+        const result = await this.notificationsRepository.update(id, updateNotification);
+        if (result.affected === 0) {
+            throw new NotFoundException('Notification not found');
+        }
     }
 
+
+/**
+   * Elimina notificacion por ID
+   * @param id - ID inico de una notificacion
+   * @return Regresa una respuesta de la funcion
+   */
     async deleteN(id: number){
-        const findN = await this.NeRepository.findOne({
-            where: {
-                id
-            }
+        const notification = await this.notificationsRepository.findOne({
+            where: { id },
         });
-        if(!findN){
-            throw new Error('no existe')
-        };
-        this.NeRepository.delete(id)
-
-        return "borrado";
+        if (!notification) {
+            throw new NotFoundException('Notification not found');
+        }
+        await this.notificationsRepository.delete(id);
+        return 'Notification deleted';
     }
 }

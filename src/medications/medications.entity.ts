@@ -1,20 +1,29 @@
-import { Shedules } from "src/shedules/shedules.entity";
-import { Users } from "src/users/users.entity";
 import { PrimaryGeneratedColumn, Entity, Column, OneToMany, ManyToOne, JoinColumn } from "typeorm";
+import { Shedules } from "../shedules/shedules.entity";
+import { ApiProperty } from '@nestjs/swagger';
+import { Users } from "../users/users.entity";
 
-@Entity({name: 'medicina'})
-export class Medicina{
+@Entity({ name: 'medicina' })
+export class Medicina {
+
+    @ApiProperty({ description: 'ID unico de la medicina' })
     @PrimaryGeneratedColumn()
-    id: number
+    id: number;
 
+    @ApiProperty({ description: 'Nombre del medicamento', required: true })
     @Column()
-    name:string
+    name: string;
 
-    @ManyToOne(()=> Users,  users=> users.medicina)
-    @JoinColumn()
-    user: Users
+    @ApiProperty({ description: 'Dosis a tomar', required: true })
+    @Column()
+    dosis: number
 
-    @OneToMany(()=> Shedules, Shedules => Shedules.medicina)
-    @JoinColumn()
-    schedules:Shedules[]
+    @ApiProperty({ description: 'ID unico del usuario para la medicina', required: true })
+    @ManyToOne(() => Users, users => users.medicina)
+    @JoinColumn({ name: 'user' })
+    user: Users;
+
+    @ApiProperty({ description: 'Lista de alarmas de la medicina' })
+    @OneToMany(() => Shedules, shedules => shedules.medicina)
+    schedules: Shedules[];
 }
