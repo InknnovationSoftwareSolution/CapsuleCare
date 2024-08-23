@@ -1,7 +1,9 @@
-import { Body, Controller, Get, Param, ParseIntPipe, Patch, Post } from '@nestjs/common';
+import { Body, Controller, Get, Param, ParseIntPipe, Patch, Post, UseGuards } from '@nestjs/common';
 import { MedicationsService } from './medications.service';
 import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { Newmedicina, Updatmedicina } from './medications.dto';
+import { JwtAuthGuard } from '../auth/jwt-auth.guard';
+
 
 @ApiTags('Medicinas')
 @Controller('medications')
