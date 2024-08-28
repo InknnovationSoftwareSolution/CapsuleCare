@@ -14,7 +14,6 @@ export class UsersController {
     @ApiOperation({ summary: 'Nuevo usuario' })
     @ApiResponse({ status: 201, description: 'Usuario creado' })
     @ApiResponse({ status: 400, description: 'No accesible' })
-    @UseGuards(JwtAuthGuard)
     @Post()
     insert(@Body() User: usersNew){
         return this.UsersServ.agregarUser(User);
@@ -23,7 +22,6 @@ export class UsersController {
     @ApiOperation({ summary: 'Lista de usuarios' })
     @ApiResponse({ status: 200, description: 'Todos los usuarios' })
     @ApiResponse({ status: 404, description: 'No accesible' })
-    @UseGuards(JwtAuthGuard)
     @Get()
     Find(){
         return this.UsersServ.getUsers();
@@ -32,7 +30,6 @@ export class UsersController {
     @ApiOperation({ summary: 'Buscar usuario por Id' })
     @ApiResponse({ status: 200, description: 'Usuario buscado' })
     @ApiResponse({ status: 404, description: 'No accesible' })
-    @UseGuards(JwtAuthGuard)
     @Get(':id')
     findOne(@Param('id', ParseIntPipe) id: number){
         return this.UsersServ.findUser(id);
@@ -41,7 +38,6 @@ export class UsersController {
     @ApiOperation({ summary: 'Actualizar usuario por Id' })
     @ApiResponse({ status: 200, description: 'Usuario actualizado' })
     @ApiResponse({ status: 404, description: 'No accesible' })
-    @UseGuards(JwtAuthGuard)
     @Patch(':id')
     updateUser(@Param('id', ParseIntPipe) id: number,  @Body() updatU: updateUser){
         return this.UsersServ.updateUser(id, updatU);
@@ -50,7 +46,6 @@ export class UsersController {
     @ApiOperation({ summary: 'Eliminacion de usuario por Id' })
     @ApiResponse({ status: 201, description: 'Usuario eliminado' })
     @ApiResponse({ status: 400, description: 'No accesible' })
-    @UseGuards(JwtAuthGuard)
     @Delete(':id')
     deleteUser(@Param('id', ParseIntPipe) id: number){
         return this.UsersServ.deleteUser(id);

@@ -29,7 +29,7 @@ services:
       - "3000:3000"
     
     environment:
-      - POSTGRES_DB=intregradora
+      - POSTGRES_DB=intregrador
       - POSTGRES_USER=username
       - POSTGRES_PASSWORD=root
       - POSTGRES_HOST=postgres

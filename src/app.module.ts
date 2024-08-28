@@ -13,27 +13,27 @@ import { AuthModule } from './auth/auth.module';
   imports: [
     ConfigModule.forRoot({ isGlobal: true }),
     TypeOrmModule.forRoot({
-      type: 'mysql',
-      host: 'localhost',
-      port: 3306,
-      username: 'root',
-      password: '',
+      type: 'postgres',
+      host: 'postgres',
+      port: 5432,
+      username: 'username',
+      password: 'root',
       database: 'integradora',
       entities: [__dirname + '/**/*.entity{.ts,.js}'],
       synchronize: true,
+      schema: 'public',
+
+      // type: 'mysql',
+      // host: 'localhost',
+      // port: 3306,
+      // username: 'root',
+      // password: '',
+      // database: 'integrador',
+      // entities: [__dirname + '/**/*.entity{.ts,.js}'],
+      // synchronize: true,
     }),
     UsersModule, MedicationsModule, ShedulesModule, NotificationsModule,AuthModule],
   controllers: [AppController],
   providers: [AppService],
 })
 export class AppModule {}
-
-// type: "postgres",
-// host: "localhost",
-// port: 5432,
-// username: "test",
-// password: "test",
-// database: "test",
-// entities: [
-//     // ....
-// ],

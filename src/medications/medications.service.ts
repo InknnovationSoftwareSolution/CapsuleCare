@@ -24,7 +24,7 @@ export class MedicationsService {
         const med = new Medicina();
         med.name = medicina.name;
         med.user = user;
-        med.dosis = medicina.quantity;
+        med.quantity = medicina.quantity;
         return await this.MRepository.save(med);
     }
 

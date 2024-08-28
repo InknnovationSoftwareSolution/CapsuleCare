@@ -16,7 +16,7 @@ export class Medicina {
 
     @ApiProperty({ description: 'Dosis a tomar', required: true })
     @Column()
-    dosis: number
+    quantity: number
 
     @ApiProperty({ description: 'ID unico del usuario para la medicina', required: true })
     @ManyToOne(() => Users, users => users.medicina)

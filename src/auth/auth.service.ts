@@ -3,15 +3,15 @@ import { JwtService } from '@nestjs/jwt';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import * as bcrypt from 'bcrypt';
-import { User } from './user.entity';
+import { Users } from '../users/users.entity';
 import { CreateUserDto } from './dto/create-user.dto';
 import { LoginUserDto } from './dto/login-user.dto';
 
 @Injectable()
 export class AuthService {
   constructor(
-    @InjectRepository(User)
-    private usersRepository: Repository<User>,
+    @InjectRepository(Users)
+    private usersRepository: Repository<Users>,
     private jwtService: JwtService
   ) {}
 
@@ -21,10 +21,10 @@ export class AuthService {
    * @returns Retorna el nuevo tocken de acceso
    */
   async register(createUserDto: CreateUserDto) {
-    const { name, email, password } = createUserDto;
+    const { userName, email, password } = createUserDto;
     const hashedPassword = await bcrypt.hash(password, 10);
     const user = this.usersRepository.create({
-      name,
+      userName,
       email,
       password: hashedPassword,
       createdAt: true,

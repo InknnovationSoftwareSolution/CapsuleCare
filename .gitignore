@@ -3,7 +3,7 @@
 /node_modules
 
 #pg folder data
-/postgres-data
+/mysql-data
 
 # Logs
 logs
