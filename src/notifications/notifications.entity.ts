@@ -1,25 +1,25 @@
-import { Shedules } from 'src/shedules/shedules.entity';
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, OneToMany, OneToOne, JoinColumn } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, JoinColumn, OneToMany } from 'typeorm';
+import { Shedules } from '../shedules/shedules.entity';
 
-@Entity({name: 'notification'})
-export class Notifications{
-
+@Entity({ name: 'notifications' })
+export class Notifications {
     @PrimaryGeneratedColumn()
-    id: number
+    id: number;
 
-    @ManyToOne(() => Shedules, shedules => shedules.notifications)
-    @JoinColumn()
-    schedeles: Shedules
+    @ManyToOne(() => Shedules, (shedules) => shedules.notifications)
+    @JoinColumn({ name: 'schedule_id' })
 
-    @Column()
-    sent_at: string
+    schedule: Shedules;
 
-    @Column()
-    type: string
+    @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
+    sentAt: Date;
 
     @Column()
-    message: string
+    type: string;
 
     @Column()
-    created_at: Date
+    message: string;
+
+    @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
+    createdAt: Date;
 }
