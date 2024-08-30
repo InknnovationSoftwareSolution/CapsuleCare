@@ -8,11 +8,9 @@ import { Users } from '../users/users.entity';
 @Injectable()
 export class MedicationsService {
     constructor(
-
         @InjectRepository(Medicina)
         private readonly MRepository: Repository<Medicina>,
     ) {}
-
 
     async createM(medicina: Newmedicina): Promise<Medicina> {
         const user = new Users();
@@ -20,12 +18,10 @@ export class MedicationsService {
         
         const med = new Medicina();
         med.name = medicina.name;
-
         med.quantity = medicina.quantity; 
-
         med.user = user;
+
         return await this.MRepository.save(med);
-        
     }
 
     async findAll(): Promise<Medicina[]> {
@@ -43,7 +39,7 @@ export class MedicationsService {
         return medicina;
     }
 
-    async updateM(id: number, medicina: Updatmedicina): Promise<void> {
+    async updateM(id: number, medicina: Partial<Medicina>): Promise<void> {
         const updateResult = await this.MRepository.update(id, medicina);
         if (updateResult.affected === 0) {
             throw new NotFoundException(`Medicina with id ${id} not found`);

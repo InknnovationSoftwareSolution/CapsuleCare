@@ -17,7 +17,7 @@ describe('Users E2E Test', () => {
     await app.init();
 
     // Establece el token directamente
-    jwtToken =  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImFkbWluQGdtYWlsLmNvbSIsInN1YiI6MywiaWF0IjoxNzI0OTkzNTAzLCJleHAiOjE3MjQ5OTcxMDN9.Y1bzVukJRomnZCHQ-toE5-vBEsqNO4Jf6jgr7TWFw3Y';
+    jwtToken =  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImFkbWluQGdtYWlsLmNvbSIsInN1YiI6MywiaWF0IjoxNzI1MDAyMjExLCJleHAiOjE3MjUwMDU4MTF9.PpbElCVK3kgEHqqTv_9S0CYEo8sMrReuAt9DL3WbYfM';
   });
 
   it('POST: /users/register should create a user and return it', async () => {
