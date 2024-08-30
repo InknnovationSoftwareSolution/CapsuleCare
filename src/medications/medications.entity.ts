@@ -1,10 +1,10 @@
-import { Shedules } from "src/shedules/shedules.entity";
-import { Users } from "src/users/users.entity";
+import { Shedules } from "../shedules/shedules.entity";
+import { Users } from "../users/users.entity";
 import { PrimaryGeneratedColumn, Entity, Column, OneToMany, ManyToOne, JoinColumn } from "typeorm";
 
 
 
-@Entity({ name: 'medicina' })
+@Entity({ name: 'Medicina' })
 export class Medicina {
     @PrimaryGeneratedColumn()
     id: number;

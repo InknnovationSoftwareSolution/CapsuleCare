@@ -4,7 +4,7 @@ import { Repository } from 'typeorm';
 import { Notifications } from './notifications.entity';
 import { newNotificacion } from './notifications.dto';
 import { Updatnotif } from './notificationss.dto';
-import { Shedules } from 'src/shedules/shedules.entity';
+import { Shedules } from '../shedules/shedules.entity';
 
 @Injectable()
 export class NotificationsService {
