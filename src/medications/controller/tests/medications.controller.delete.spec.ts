@@ -3,7 +3,6 @@ import { MedicationsController } from '../medications.controller';
 import { MedicationsService } from '../../service/medications.service';
 import { NotFoundException } from '@nestjs/common';
 
-
 describe('MedicationsController - Delete', () => {
   let medicationsController: MedicationsController;
   let medicationsService: MedicationsService;

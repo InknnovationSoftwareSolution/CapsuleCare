@@ -52,7 +52,6 @@ describe('MedicationsService - Update', () => {
       const id = 999;
       const dto: Updatmedicina = { name: 'Test', quantity: 5 };
 
-      // Simula un resultado de actualización fallido (no se encontró el registro)
       mockRepository.update.mockResolvedValue({ affected: 0 });
 
       await expect(medicationsService.updateM(id, dto)).rejects.toThrow(

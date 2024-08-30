@@ -1,5 +1,3 @@
-// src/medications/service/tests/medications.service.read.spec.ts
-
 import { Test, TestingModule } from '@nestjs/testing';
 import { MedicationsService } from '../medications.service';
 import { getRepositoryToken } from '@nestjs/typeorm';

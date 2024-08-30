@@ -5,7 +5,6 @@ import { Newmedicina } from '../../medications.dto';
 
 describe('MedicationsController - Create', () => {
   let medicationsController: MedicationsController;
-  let medicationsService: MedicationsService;
 
   const mockMedicationsService = {
     createM: jest.fn((dto: Newmedicina) => {
@@ -26,7 +25,6 @@ describe('MedicationsController - Create', () => {
       .compile();
 
     medicationsController = module.get<MedicationsController>(MedicationsController);
-    medicationsService = module.get<MedicationsService>(MedicationsService);
   });
 
   it('should be defined', () => {
