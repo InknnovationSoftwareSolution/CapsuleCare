@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable, NotFoundException, BadRequestException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Medicina } from './medications.entity';
@@ -13,45 +13,74 @@ export class MedicationsService {
     ) {}
 
     async createM(medicina: Newmedicina): Promise<Medicina> {
-        const user = new Users();
-        user.id = medicina.user;
-        
-        const med = new Medicina();
-        med.name = medicina.name;
-        med.quantity = medicina.quantity; 
-        med.user = user;
+        try {
+            const user = new Users();
+            user.id = medicina.user;
 
-        return await this.MRepository.save(med);
+            const med = new Medicina();
+            med.name = medicina.name;
+            med.quantity = medicina.quantity;
+            med.user = user;
+
+            return await this.MRepository.save(med);
+        } catch (error) {
+            throw new BadRequestException('Error al crear la medicina');
+        }
     }
 
     async findAll(): Promise<Medicina[]> {
-        return await this.MRepository.find({ relations: ['user'] });
+        try {
+            return await this.MRepository.find({ relations: ['user'] });
+        } catch (error) {
+            throw new BadRequestException('Error al recuperar las medicinas');
+        }
     }
 
     async findMedicina(id: number): Promise<Medicina> {
-        const medicina = await this.MRepository.findOne({
-            where: { id },
-            relations: ['user', 'schedules'],
-        });
-        if (!medicina) {
-            throw new NotFoundException(`Medicina with id ${id} not found`);
+        try {
+            const medicina = await this.MRepository.findOne({
+                where: { id },
+                relations: ['user', 'schedules'],
+            });
+            if (!medicina) {
+                throw new NotFoundException(`Medicina con id ${id} no encontrada`);
+            }
+            return medicina;
+        } catch (error) {
+            if (error instanceof NotFoundException) {
+                throw error;
+            }
+            throw new BadRequestException('Error al recuperar la medicina');
         }
-        return medicina;
     }
 
-    async updateM(id: number, medicina: Partial<Medicina>): Promise<void> {
-        const updateResult = await this.MRepository.update(id, medicina);
-        if (updateResult.affected === 0) {
-            throw new NotFoundException(`Medicina with id ${id} not found`);
+    async updateM(id: number, medicina: Updatmedicina): Promise<void> {
+        try {
+            const updateResult = await this.MRepository.update(id, medicina);
+            if (updateResult.affected === 0) {
+                throw new NotFoundException(`Medicina con id ${id} no encontrada`);
+            }
+        } catch (error) {
+            if (error instanceof NotFoundException) {
+                throw error;
+            }
+            throw new BadRequestException('Error al actualizar la medicina');
         }
     }
 
     async deleteM(id: number): Promise<string> {
-        const find = await this.MRepository.findOne({ where: { id } });
-        if (!find) {
-            throw new NotFoundException(`Medicina with id ${id} not found`);
+        try {
+            const find = await this.MRepository.findOne({ where: { id } });
+            if (!find) {
+                throw new NotFoundException(`Medicina con id ${id} no encontrada`);
+            }
+            await this.MRepository.delete(id);
+            return 'Medicina borrada';
+        } catch (error) {
+            if (error instanceof NotFoundException) {
+                throw error;
+            }
+            throw new BadRequestException('Error al borrar la medicina');
         }
-        await this.MRepository.delete(id);
-        return 'Medicina borrada';
     }
 }

@@ -6,10 +6,12 @@ import { AuthService } from './auth.service';
 import { AuthController } from './auth.controller';
 import { Users } from '../users/users.entity'; 
 import { JwtStrategy } from './jwt.strategy';
+import { UsersModule } from 'src/users/users.module';
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([Users]), 
+    UsersModule,
     PassportModule,
     JwtModule.register({
       secret: 'secretKey',
@@ -21,3 +23,4 @@ import { JwtStrategy } from './jwt.strategy';
   exports: [AuthService], 
 })
 export class AuthModule {}
+
