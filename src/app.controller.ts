@@ -1,17 +1,21 @@
-import { Controller, Get } from '@nestjs/common';
-import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
-import { AppService } from './app.service';
+import { Controller, Get, UseGuards } from '@nestjs/common';
+import { JwtAuthGuard } from './auth/jwt-auth.guard';
 
-ApiTags('/');
-@Controller()
+@Controller('app')
 export class AppController {
-  constructor(private readonly appService: AppService) {}
-
-  @ApiOperation({ summary: 'Hola mundo' })
-  @ApiResponse({ status: 201, description: 'Hola mundo' })
-  @ApiResponse({ status: 400, description: 'not found' })
-  @Get()
+  @Get('hello')
   getHello(): string {
-    return this.appService.getHello();
+    return 'Hello World!';
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Get('secure-endpoint')
+  getSecureData() {
+    return "This is a secure data";
+  }
+
+  @Get('public-endpoint')
+  getPublicData() {
+    return "This is public data";
   }
 }

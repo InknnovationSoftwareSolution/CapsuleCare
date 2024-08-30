@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable, NotFoundException, BadRequestException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Notifications } from './notifications.entity';
@@ -12,81 +12,99 @@ export class NotificationsService {
         @InjectRepository(Notifications) private readonly notificationsRepository: Repository<Notifications>
     ) {}
 
+    async createN(notification: newNotificacion): Promise<Notifications> {
+        try {
+            const shedule = new Shedules();
+            shedule.id = notification.schedule;
 
-  /**
-   * Crea una nueva notificacion.
-   * @param notification - Objeto o modelo de datos para la base de datos.
-   * @return Regresa la informacion de la notificacion.
-   */
-    async createN(notification: newNotificacion){
-        const shedule = new Shedules();
-        shedule.id = notification.schedule;
+            const notifi = new Notifications();
+            notifi.schedule = shedule;
+            notifi.message = notification.message;
+            notifi.sentAt = notification.sent;
+            notifi.type = notification.type;
 
-        const notifi = new Notifications();
-        notifi.schedule = shedule;
-        notifi.message = notification.message;
-        notifi.sentAt = notification.sent;
-        notifi.type = notification.type;
-        return await this.notificationsRepository.save(notifi);
+            return await this.notificationsRepository.save(notifi);
+        } catch (error) {
+            throw new BadRequestException('Error al crear la notificacion');
+        }
     }
 
-
-/**
-   * Muestra una lista de notificaciones con relacion join con shedules
-   * @returns Retorna toda la lsita de notificaciones
-   */
     async findAll(): Promise<Notifications[]> {
-        return await this.notificationsRepository.find({
-            relations: {
-                schedule: true
-            },
-        });
-    }
-
-
-/**
-   * Busqueda por ID en la tabla notificaciones
-   * @param id - Id unico de una notificacion.
-   * @return Retorna la notificacion buscado por ID
-   */
-    async findNotification(id: number) {
-        const notification = await this.notificationsRepository.findOne({
-            where: { id },
-        });
-        if (!notification) {
-            throw new NotFoundException('Notification not found');
-        }
-        return notification;
-    }
-
-
-/**
-   * Actualiza notificacion por ID
-   * @param id - The ID of the user.
-   * @param updateNotification - Objeto o modelo de datos para la base de datos.
-   * @return Regresa la respuesta de si fue afectada la fila
-   */
-    async updateN(id: number, updateNotification: Updatnotif) {
-        const result = await this.notificationsRepository.update(id, updateNotification);
-        if (result.affected === 0) {
-            throw new NotFoundException('Notification not found');
+        try {
+            return await this.notificationsRepository.find({
+                relations: { schedule: true },
+            });
+        } catch (error) {
+            throw new BadRequestException('Error al recuperar las notificaciones');
         }
     }
 
-
-/**
-   * Elimina notificacion por ID
-   * @param id - ID inico de una notificacion
-   * @return Regresa una respuesta de la funcion
-   */
-    async deleteN(id: number){
-        const notification = await this.notificationsRepository.findOne({
-            where: { id },
-        });
-        if (!notification) {
-            throw new NotFoundException('Notification not found');
+    async findNotification(id: number): Promise<Notifications> {
+        try {
+            const notification = await this.notificationsRepository.findOne({
+                where: { id },
+            });
+            if (!notification) {
+                throw new NotFoundException(`Notificación con id ${id} no encontrada`);
+            }
+            return notification;
+        } catch (error) {
+            if (error instanceof NotFoundException) {
+                throw error;
+            }
+            throw new BadRequestException('Error al recuperar la notificacion');
         }
-        await this.notificationsRepository.delete(id);
-        return 'Notification deleted';
+    }
+
+    async updateN(id: number, updateNotification: Updatnotif): Promise<void> {
+        try {
+            const notification = await this.notificationsRepository.findOne({ where: { id } });
+            if (!notification) {
+                throw new NotFoundException(`Notificacion con id ${id} no encontrada`);
+            }
+
+            if (updateNotification.shedule) {
+                const schedule = new Shedules();
+                schedule.id = updateNotification.shedule;
+                notification.schedule = schedule;
+            }
+
+            if (updateNotification.sent) {
+                notification.sentAt = updateNotification.sent;
+            }
+
+            if (updateNotification.type) {
+                notification.type = updateNotification.type;
+            }
+
+            if (updateNotification.message) {
+                notification.message = updateNotification.message;
+            }
+
+            await this.notificationsRepository.save(notification);
+        } catch (error) {
+            if (error instanceof NotFoundException) {
+                throw error;
+            }
+            throw new BadRequestException('Error al actualizar la notificacion');
+        }
+    }
+
+    async deleteN(id: number): Promise<string> {
+        try {
+            const notification = await this.notificationsRepository.findOne({ where: { id } });
+
+            if (!notification) {
+                throw new NotFoundException(`Notificación con id ${id} no encontrada`);
+            }
+
+            await this.notificationsRepository.delete(id);
+            return 'Notificación eliminada';
+        } catch (error) {
+            if (error instanceof NotFoundException) {
+                throw error;
+            }
+            throw new BadRequestException('Error al eliminar la notificacion');
+        }
     }
 }

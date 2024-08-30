@@ -1,37 +1,25 @@
-import { IsString, IsNotEmpty, IsOptional, IsEmail } from 'class-validator';
-import { ApiProperty } from '@nestjs/swagger';
+import { IsString, IsInt, IsNotEmpty } from 'class-validator';
 
-export class usersNew {
+export class usersNew{
+    @IsNotEmpty({message:"No puede quedar vacío"})
+    @IsString({message:"El dato debe ser texto"})
+    userName: string
 
-    @ApiProperty({ description: 'Nombre del usuario', required: true })
-    @IsNotEmpty({ message: "No puede quedar vacío" })
-    @IsString({ message: "El dato debe ser texto" })
-    userName: string;
-  
-    @ApiProperty({ description: 'Correo del usuario', required: true })
-    @IsNotEmpty({ message: "No puede quedar vacío" })
-    @IsEmail({}, { message: "Debe ser un email válido" })
-    email: string;
-  
-    @ApiProperty({ description: 'Clave del usuario', required: true })
-    @IsNotEmpty({ message: "No puede quedar vacío" })
-    password: string;
-  }
-  
-  export class updateUser {
+    @IsNotEmpty({message:"No puede quedar vacío"})
+    @IsString({message:"El dato debe ser texto"})
+    email:string
 
-    @ApiProperty({ description: 'Nombre del usuario', required: false })
-    @IsOptional()
-    @IsString({ message: "El dato debe ser texto" })
-    userName?: string;
-  
-    @ApiProperty({ description: 'Correo del usuario', required: false })
-    @IsOptional()
-    @IsEmail({}, { message: "Debe ser un email válido" })
-    email?: string;
-  
-    @ApiProperty({ description: 'Clave del usuario', required: false })
-    @IsOptional()
-    @IsString({ message: "El dato debe ser texto" })
-    password?: string;
-  }
+    @IsNotEmpty({message:"No puede quedar vacío"})
+    password:string
+}
+
+export class updateUser{
+    @IsString({message:"El dato debe ser texto"})
+    userName?: string
+
+    @IsString({message:"El dato debe ser texto"})
+    email?:string
+
+    @IsString({message:"El dato debe ser texto"})
+    password?:string
+}
