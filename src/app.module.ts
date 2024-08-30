@@ -17,9 +17,9 @@ import { AuthModule } from './auth/auth.module';
       port: 3306,
       username: 'root',
       password: '',
-      database: 'integradora',
+      database: 'integradora2',
       entities: [__dirname + '/**/*.entity{.ts,.js}'],
-      synchronize: true
+      synchronize: false
     }),
     UsersModule, MedicationsModule, ShedulesModule, NotificationsModule, AuthModule],
   controllers: [AppController],

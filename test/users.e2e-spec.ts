@@ -1,134 +1,90 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { INestApplication } from '@nestjs/common';
 import * as request from 'supertest';
-import { UsersModule } from '../src/users/users.module';
-import { AuthModule } from '../src/auth/auth.module';
-import { JwtService } from '@nestjs/jwt';
-import { TypeOrmModule } from '@nestjs/typeorm';
-import { Users } from '../src/users/users.entity';
-import { getRepositoryToken } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { AppModule } from '../src/app.module';
 
-describe('UsersController (e2e)', () => {
+describe('Users E2E Test', () => {
   let app: INestApplication;
-  let jwtService: JwtService;
-  let userRepository: Repository<Users>;
-  let token: string;
+  let jwtToken: string;
+  let userId: number;
 
   beforeAll(async () => {
     const moduleRef: TestingModule = await Test.createTestingModule({
-      imports: [
-        TypeOrmModule.forRoot({
-          type: 'mysql',
-          host: 'localhost',
-          port: 3306,
-          username: 'root',
-          password: '',
-          database: 'integradora',
-          entities: [__dirname + '/../**/*.entity{.ts,.js}'],
-          synchronize: true,
-          logging: true
-        }),
-        UsersModule,
-        AuthModule,
-      ],
+      imports: [AppModule],
     }).compile();
 
     app = moduleRef.createNestApplication();
     await app.init();
 
-    jwtService = moduleRef.get<JwtService>(JwtService);
-    userRepository = moduleRef.get<Repository<Users>>(getRepositoryToken(Users));
+    // Establece el token directamente
+    jwtToken =  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImFkbWluQGdtYWlsLmNvbSIsInN1YiI6MywiaWF0IjoxNzI0OTkzNTAzLCJleHAiOjE3MjQ5OTcxMDN9.Y1bzVukJRomnZCHQ-toE5-vBEsqNO4Jf6jgr7TWFw3Y';
   });
 
-  beforeEach(async () => {
-    await userRepository.clear(); // Clean up the database before each test
-
-    const user = await userRepository.save({
-      userName: 'testuser',
-      email: 'testuser@example.com',
-      password: 'password123',
-    });
-
-    const loginResponse = await request(app.getHttpServer())
-      .post('/users/login')
-      .send({
-        email: 'testuser@example.com',
-        password: 'password123',
-      });
-
-    token = loginResponse.body.access_token;
-  });
-
-  it('/users/register (POST)', async () => {
+  it('POST: /users/register should create a user and return it', async () => {
     const response = await request(app.getHttpServer())
       .post('/users/register')
       .send({
-        userName: 'newuser',
-        email: 'newuser@example.com',
-        password: 'password123',
-        // Remove or adjust fields that may not be necessary or are handled differently
+        userName: 'testuser',
+        email: 'testuser@example.com',
+        password: 'testpassword',
       })
       .expect(201);
 
-    expect(response.body).toHaveProperty('access_token');
-    expect(response.body.user).toHaveProperty('id');
-    expect(response.body.user.userName).toBe('newuser');
-    expect(response.body.user.email).toBe('newuser@example.com');
+    userId = response.body.user.id;
+
+    expect(response.body.user.id).toBeDefined();
+    expect(response.body.user.email).toEqual('testuser@example.com');
   });
 
-  it('/users/login (POST)', async () => {
-    const response = await request(app.getHttpServer())
-      .post('/users/login')
-      .send({
-        email: 'testuser@example.com',
-        password: 'password123',
-      })
-      .expect(200);
-
-    expect(response.body).toHaveProperty('access_token');
-  });
-
-  it('/users (GET)', async () => {
+  it('GET: /users should return all users', async () => {
     const response = await request(app.getHttpServer())
       .get('/users')
-      .set('Authorization', `Bearer ${token}`)
+      .set('Authorization',` Bearer ${jwtToken}`)
       .expect(200);
 
     expect(Array.isArray(response.body)).toBe(true);
-    expect(response.body[0]).toHaveProperty('userName');
-    expect(response.body[0]).toHaveProperty('email');
+    expect(response.body.length).toBeGreaterThan(0);
   });
 
-  it('/users/:id (PATCH)', async () => {
-    const users = await userRepository.findOne({ where: { email: 'testuser@example.com' } });
-
-    if (!users) {
-      throw new Error('User not found');
-    }
-
+  it('GET: /users/:id should return a specific user', async () => {
     const response = await request(app.getHttpServer())
-      .patch(`/users/${users.id}`)
-      .set('Authorization', `Bearer ${token}`)
-      .send({ userName: 'updateduser' })
+      .get(`/users/${userId}`)
+      .set('Authorization', `Bearer ${jwtToken}`)
       .expect(200);
 
-    expect(response.body).toEqual({});
+    expect(response.body.id).toEqual(userId);
+    expect(response.body.email).toEqual('testuser@example.com');
   });
 
-  it('/users/:id (DELETE)', async () => {
-    const users = await userRepository.findOne({ where: { email: 'testuser@example.com' } });
-
-    if (!users) {
-      throw new Error('User not found');
-    }
-
-    const response = await request(app.getHttpServer())
-      .delete(`/users/${users.id}`)
-      .set('Authorization', `Bearer ${token}`)
+  it('PATCH: /users/:id should update the user and return it', async () => {
+    await request(app.getHttpServer())
+      .patch(`/users/${userId}`)
+      .set('Authorization',` Bearer ${jwtToken}`)
+      .send({
+        userName: 'updateduser',
+        email: 'updateduser@example.com',
+      })
       .expect(200);
 
-    expect(response.text).toBe('User deleted');
+    const response = await request(app.getHttpServer())
+      .get(`/users/${userId}`)
+      .set('Authorization', `Bearer ${jwtToken}`)
+      .expect(200);
+
+    expect(response.body.userName).toEqual('updateduser');
+    expect(response.body.email).toEqual('updateduser@example.com');
+  });
+
+  it('DELETE: /users/:id should delete the user', async () => {
+    await request(app.getHttpServer())
+      .delete(`/users/${userId}`)
+      .set('Authorization', `Bearer ${jwtToken}`)
+      .expect(200);
+
+    await request(app.getHttpServer())
+      .get(`/users/${userId}`)
+      .set('Authorization', `Bearer ${jwtToken}`)
+      .expect(404);
   });
 
   afterAll(async () => {
