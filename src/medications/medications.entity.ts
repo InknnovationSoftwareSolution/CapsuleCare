@@ -21,7 +21,7 @@ export class Medicina {
 
     @OneToMany(() => Shedules, Shedules => Shedules.medicina)
     @JoinColumn()
-    schedules:Shedules[]
+    shedules:Shedules[]
 }
 
 

@@ -1,7 +1,11 @@
 import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, OneToMany, JoinColumn } from 'typeorm';
 import { Medicina } from '../medications/medications.entity';
 import { Users } from '../users/users.entity';
+<<<<<<< HEAD
 import { Notifications } from '../notifications/notifications.entity';
+=======
+import { Notifications } from './../notifications/notifications.entity';
+>>>>>>> test
 
 @Entity({ name: 'shedules' })
 export class Shedules {
@@ -13,7 +17,7 @@ export class Shedules {
     @JoinColumn({ name: 'user' })
     users: Users;
 
-    @ManyToOne(() => Medicina, medicina => medicina.schedules)
+    @ManyToOne(() => Medicina, medicina => medicina.shedules)
     @JoinColumn({ name: 'medicina' })
 
     medicina: Medicina;
