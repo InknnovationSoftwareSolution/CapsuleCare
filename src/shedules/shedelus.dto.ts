@@ -1,4 +1,4 @@
-import {  IsInt, IsNotEmpty, IsOptional } from 'class-validator';
+import {  IsInt, IsNotEmpty } from 'class-validator';
 
 export class newShed{
     @IsNotEmpty({message:"No puede quedar vacío"})
@@ -18,7 +18,6 @@ export class newShed{
 }
 
 export class updatShed{
-    @IsOptional()
     @IsNotEmpty({message:"No puede quedar vacío"})
     @IsInt({message:"El dato debe ser un número"})
     intervalo?: number

@@ -87,7 +87,7 @@ describe('UsersController', () => {
       ];
       jest.spyOn(usersService, 'getUsers').mockResolvedValue(users);
 
-      expect(await usersController.Find()).toEqual(users);
+      expect(await usersController.find()).toEqual(users);
     });
   });
 

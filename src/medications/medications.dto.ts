@@ -1,4 +1,4 @@
-import { IsString, IsInt, IsNotEmpty, Min, IsOptional } from 'class-validator';
+import { IsString, IsInt, IsNotEmpty, Min } from 'class-validator';
 
 export class Newmedicina {
     @IsNotEmpty({message:"No puede quedar vacío"})
@@ -17,12 +17,10 @@ export class Newmedicina {
   }
   
   export class Updatmedicina {
-    @IsOptional()
     @IsNotEmpty({message:"No puede quedar vacío"})
     @IsString({message:"El dato debe ser texto"})
     name?: string;
 
-    @IsOptional()
     @IsNotEmpty({message:"No puede quedar vacío"})
     @IsInt({message:"El dato debe ser un número"})
     quantity?: number;

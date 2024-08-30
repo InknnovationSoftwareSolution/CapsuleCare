@@ -2,6 +2,7 @@ import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { UsersModule } from './users/users.module';
+import { MedicationsService } from './medications/medications.service';
 import { MedicationsModule } from './medications/medications.module';
 import { ShedulesModule } from './shedules/shedules.module';
 import { NotificationsModule } from './notifications/notifications.module';
