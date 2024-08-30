@@ -4,7 +4,7 @@ import { PrimaryGeneratedColumn, Entity, Column, OneToMany, ManyToOne, JoinColum
 
 
 
-@Entity({ name: 'medicina' })
+@Entity({ name: 'Medicina' })
 export class Medicina {
     @PrimaryGeneratedColumn()
     id: number;
