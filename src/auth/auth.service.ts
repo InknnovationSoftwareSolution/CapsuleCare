@@ -39,7 +39,7 @@ export class AuthService {
         access_token: this.jwtService.sign(payload),
       };
     }
-    throw new Error('Las credenciales no coinciden');
+    throw new Error('Los datos son incorrectos');
   }
 
   async validateUser(email: string, password: string): Promise<any> {

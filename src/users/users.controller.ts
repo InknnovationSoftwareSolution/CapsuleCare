@@ -6,6 +6,7 @@ import { LoginUserDto } from '../auth/dto/login-user.dto';
 
 @Controller('users')
 export class UsersController {
+
     constructor(private readonly UsersServ: UsersService) {}
 
     @Post('register')

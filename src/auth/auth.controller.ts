@@ -5,6 +5,9 @@ import { LoginUserDto } from './dto/login-user.dto';
 
 @Controller('auth')
 export class AuthController {
+  static login(LoginUserDto: LoginUserDto): any {
+      throw new Error("Method not implemented.");
+  }
   constructor(private readonly authService: AuthService) {}
 
   @Post('register')

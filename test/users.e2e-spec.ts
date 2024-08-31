@@ -1,93 +1,88 @@
-import { Test, TestingModule } from '@nestjs/testing';
-import { INestApplication } from '@nestjs/common';
+import { Test,TestingModule } from "@nestjs/testing";
+import { INestApplication } from "@nestjs/common";
 import * as request from 'supertest';
-import { AppModule } from '../src/app.module';
+import {AppModule} from '../src/app.module'
+import passport from "passport";
 
-describe('Users E2E Test', () => {
-  let app: INestApplication;
-  let jwtToken: string;
-  let userId: number;
+describe('Pruebas e2e de usuarios', ()=>{
+    let app:INestApplication;
+    let jwToken:string;
+    let userID: number;
+    beforeEach(async ()=>{
+        const module: TestingModule = await Test.createTestingModule({
+            imports:[AppModule],
+        }).compile();
+        app=module.createNestApplication();
+        await app.init();
 
-  beforeAll(async () => {
-    const moduleRef: TestingModule = await Test.createTestingModule({
-      imports: [AppModule],
-    }).compile();
+        jwToken= 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImFkbWluQGdtYWlsLmNvbSIsInN1YiI6MywiaWF0IjoxNzI1MTE3MDQ5LCJleHAiOjE3MjUxMjA2NDl9.F-fs4nxNT0AHYS9itE-QIh_bckzYTGYXkeEJQN6_23I'
+    });
+        it('POST: /users/register debe crear un nuevo usuario y mostrarlo', async ()=>{
+            const response = await request(app.getHttpServer()).post('/users/register').send({
+                userName: 'Usuario de prueba',
+                email: 'test@gmail.com',
+                password: '1234'
+            }).expect(201);
 
-    app = moduleRef.createNestApplication();
-    await app.init();
+            userID= response.body.user.id;
+            expect(response.body.user.email).toEqual('test@gmail.com');
 
-    // Establece el token directamente
-    jwtToken =  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImFkbWluQGdtYWlsLmNvbSIsInN1YiI6MywiaWF0IjoxNzI1MDAyMjExLCJleHAiOjE3MjUwMDU4MTF9.PpbElCVK3kgEHqqTv_9S0CYEo8sMrReuAt9DL3WbYfM';
-  });
+        });
+        it('GET: /users debe mostrar TODOS los usuarios en la BD', async ()=>{
+            const response = await request(app.getHttpServer()).get('/users')
+            .set('Authorization', `Bearer ${jwToken}`)
+            .expect(200);
 
-  it('POST: /users/register should create a user and return it', async () => {
-    const response = await request(app.getHttpServer())
-      .post('/users/register')
-      .send({
-        userName: 'testuser',
-        email: 'testuser@example.com',
-        password: 'testpassword',
-      })
-      .expect(201);
+            expect (Array.isArray(response.body)).toBe(true);
+            expect(response.body.length).toBeGreaterThan(0);
 
-    userId = response.body.user.id;
+        });
+        it('GET: /users:id debe mostrar un usuario especifico en la BD', async ()=>{
+            const response = await request(app.getHttpServer())
+            .get(`/users/${userID}`)
+            .set('Authorization', `Bearer ${jwToken}`)
+            .expect(200);
 
-    expect(response.body.user.id).toBeDefined();
-    expect(response.body.user.email).toEqual('testuser@example.com');
-  });
+            expect(response.body.id).toEqual(userID);
+            expect(response.body.email).toEqual('test@gmail.com');
 
-  it('GET: /users should return all users', async () => {
-    const response = await request(app.getHttpServer())
-      .get('/users')
-      .set('Authorization',` Bearer ${jwtToken}`)
-      .expect(200);
+        });
 
-    expect(Array.isArray(response.body)).toBe(true);
-    expect(response.body.length).toBeGreaterThan(0);
-  });
+        it('PATCH: /users/:id debería actualizar un usuario y mostrarlo', async ()=>{
+            await request(app.getHttpServer())
+            .patch(`/users/${userID}`)
+            .set('Authorization', `Bearer ${jwToken}`)
+            .send(
+                {
+                    userName:'Usuario actualizado',
+                    email:'correonuevo@gmail.com'
+                }
+            )
+            .expect(200);
 
-  it('GET: /users/:id should return a specific user', async () => {
-    const response = await request(app.getHttpServer())
-      .get(`/users/${userId}`)
-      .set('Authorization', `Bearer ${jwtToken}`)
-      .expect(200);
+            const response = await request(app.getHttpServer())
+            .get(`/users/${userID}`)
+            .set('Authorization', `Bearer ${jwToken}`)
+            .expect(200);
+    
 
-    expect(response.body.id).toEqual(userId);
-    expect(response.body.email).toEqual('testuser@example.com');
-  });
+        expect(response.body.userName).toEqual('Usuario actualizado');
+        expect(response.body.email).toEqual('correonuevo@gmail.com');
+           }); 
 
-  it('PATCH: /users/:id should update the user and return it', async () => {
-    await request(app.getHttpServer())
-      .patch(`/users/${userId}`)
-      .set('Authorization',` Bearer ${jwtToken}`)
-      .send({
-        userName: 'updateduser',
-        email: 'updateduser@example.com',
-      })
-      .expect(200);
+           it('DELETE: /users/:id', async()=>{
+            await request(app.getHttpServer())
+            .delete(`/users/${userID}`)
+            .set('Authorization', `Bearer ${jwToken}`)
+            .expect(200);
 
-    const response = await request(app.getHttpServer())
-      .get(`/users/${userId}`)
-      .set('Authorization', `Bearer ${jwtToken}`)
-      .expect(200);
+            await request(app.getHttpServer())
+            .get(`/users/${userID}`)
+            .set('Authorization', `Bearer ${jwToken}`)
+            .expect(404);
+           });
 
-    expect(response.body.userName).toEqual('updateduser');
-    expect(response.body.email).toEqual('updateduser@example.com');
-  });
-
-  it('DELETE: /users/:id should delete the user', async () => {
-    await request(app.getHttpServer())
-      .delete(`/users/${userId}`)
-      .set('Authorization', `Bearer ${jwtToken}`)
-      .expect(200);
-
-    await request(app.getHttpServer())
-      .get(`/users/${userId}`)
-      .set('Authorization', `Bearer ${jwtToken}`)
-      .expect(404);
-  });
-
-  afterAll(async () => {
-    await app.close();
-  });
-});
+           afterAll(async ()=>{
+            await app.close();
+           })
+    });

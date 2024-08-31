@@ -1,7 +1,7 @@
 import { Body, Controller, Delete, Get, NotFoundException, Param, ParseIntPipe, Patch, Post, UseGuards } from '@nestjs/common';
-import { MedicationsService } from '../service/medications.service';
-import { Newmedicina, Updatmedicina } from '../medications.dto';
-import { JwtAuthGuard } from '../../auth/jwt-auth.guard';
+import { MedicationsService } from '../medications/medications.service';
+import { Newmedicina, Updatmedicina } from './medications.dto';
+import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 
 @UseGuards(JwtAuthGuard)
 @Controller('medications')
