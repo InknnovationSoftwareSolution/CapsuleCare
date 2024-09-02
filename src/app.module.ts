@@ -2,7 +2,7 @@ import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { UsersModule } from './users/users.module';
-import { MedicationsService } from './medications/medications.service';
+import { MedicationsService } from './medications/service/medications.service';
 import { MedicationsModule } from './medications/medications.module';
 import { ShedulesModule } from './shedules/shedules.module';
 import { NotificationsModule } from './notifications/notifications.module';
@@ -17,9 +17,9 @@ import { AuthModule } from './auth/auth.module';
       port: 3306,
       username: 'root',
       password: '',
-      database: 'integradora2',
+      database: 'integradora',
       entities: [__dirname + '/**/*.entity{.ts,.js}'],
-      synchronize: false
+      synchronize: false,
     }),
     UsersModule, MedicationsModule, ShedulesModule, NotificationsModule, AuthModule],
   controllers: [AppController],

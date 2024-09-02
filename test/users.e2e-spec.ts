@@ -2,7 +2,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { INestApplication } from '@nestjs/common';
 import * as request from 'supertest';
 import { AppModule } from '../src/app.module';
-
+jest.setTimeout(30000);
 describe('Users E2E Test', () => {
   let app: INestApplication;
   let jwtToken: string;
@@ -17,7 +17,7 @@ describe('Users E2E Test', () => {
     await app.init();
 
     // Establece el token directamente
-    jwtToken =  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImFkbWluQGdtYWlsLmNvbSIsInN1YiI6MywiaWF0IjoxNzI1MDAyMjExLCJleHAiOjE3MjUwMDU4MTF9.PpbElCVK3kgEHqqTv_9S0CYEo8sMrReuAt9DL3WbYfM';
+    jwtToken =  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImFkbWluQGV4YW1wbGUuY29tIiwic3ViIjo1LCJpYXQiOjE3MjUyNTkzMjksImV4cCI6MTcyNTI2MjkyOX0.33SE6U8z9EtQwDwYD11Hd-aICVHVvHPN78FRBdefCGg';
   });
 
   it('POST: /users/register should create a user and return it', async () => {
@@ -88,6 +88,9 @@ describe('Users E2E Test', () => {
   });
 
   afterAll(async () => {
-    await app.close();
+
+    if (app) {
+      await app.close();
+    }
   });
 });

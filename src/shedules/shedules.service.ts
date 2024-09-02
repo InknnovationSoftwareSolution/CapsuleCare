@@ -2,7 +2,7 @@ import { Injectable, NotFoundException, BadRequestException } from '@nestjs/comm
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Shedules } from './shedules.entity';
-import { newShed, updatShed } from './shedelus.dto';
+import { newShed, updateS } from './shedelus.dto';
 import { Medicina } from '../medications/medications.entity';
 import { Users } from '../users/users.entity';
 
