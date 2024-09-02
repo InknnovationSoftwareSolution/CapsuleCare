@@ -37,7 +37,7 @@ describe('MedicationsService - Delete', () => {
     it('should delete a medication', async () => {
       const med: Medicina = {
           id: 1, name: 'Medicine', quantity: 10, user: { id: 1 } as any,
-          shedules: []
+          schedules: []
       };
 
       mockMedicationsRepository.findOne.mockResolvedValue(med);
@@ -53,7 +53,7 @@ describe('MedicationsService - Delete', () => {
       mockMedicationsRepository.findOne.mockResolvedValue(null);
 
       await expect(medicationsService.deleteM(999)).rejects.toThrow(
-        new NotFoundException('Medicina con id 999 no encontrada'),
+        new NotFoundException(`Medicina con id 999 no encontrada`),
       );
     });
   });

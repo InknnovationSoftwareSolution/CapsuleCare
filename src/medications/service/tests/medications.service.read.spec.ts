@@ -38,11 +38,11 @@ describe('MedicationsService - Read', () => {
       const meds: Medicina[] = [
         {
             id: 1, name: 'Medicine One', quantity: 10, user: { id: 1 } as any,
-            shedules: []
+            schedules: []
         },
         {
             id: 2, name: 'Medicine Two', quantity: 20, user: { id: 2 } as any,
-            shedules: []
+            schedules: []
         },
       ];
 
@@ -58,7 +58,7 @@ describe('MedicationsService - Read', () => {
     it('should return a medication by ID', async () => {
       const med: Medicina = {
           id: 1, name: 'Medicine', quantity: 10, user: { id: 1 } as any,
-          shedules: []
+          schedules: []
       };
 
       mockMedicationsRepository.findOne.mockResolvedValue(med);
@@ -67,7 +67,7 @@ describe('MedicationsService - Read', () => {
       expect(result).toEqual(med);
       expect(mockMedicationsRepository.findOne).toHaveBeenCalledWith({
         where: { id: 1 },
-        relations: ['user', 'shedules'],
+        relations: ['user', 'schedules'],
       });
           });
 
@@ -75,7 +75,7 @@ describe('MedicationsService - Read', () => {
       mockMedicationsRepository.findOne.mockResolvedValue(null);
 
       await expect(medicationsService.findMedicina(999)).rejects.toThrow(
-        new NotFoundException('Medicina con id 999 no encontrada'),
+        new NotFoundException(`Medicina con id 999 no encontrada`),
       );
     });
   });

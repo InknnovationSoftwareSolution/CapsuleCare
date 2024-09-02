@@ -34,7 +34,7 @@ export class MedicationsService {
             relations: ['user', 'schedules'],
         });
         if (!medicina) {
-            throw new NotFoundException(`Medicina with id ${id} not found`);
+            throw new NotFoundException(`Medicina con id ${id} no encontrada`);
         }
         return medicina;
     }
@@ -42,14 +42,14 @@ export class MedicationsService {
     async updateM(id: number, medicina: Partial<Medicina>): Promise<void> {
         const updateResult = await this.MRepository.update(id, medicina);
         if (updateResult.affected === 0) {
-            throw new NotFoundException(`Medicina with id ${id} not found`);
+            throw new NotFoundException(`Medicina con id ${id} no encontrada`);
         }
     }
 
     async deleteM(id: number): Promise<string> {
         const find = await this.MRepository.findOne({ where: { id } });
         if (!find) {
-            throw new NotFoundException(`Medicina with id ${id} not found`);
+            throw new NotFoundException(`Medicina con id ${id} no encontrada`);
         }
         await this.MRepository.delete(id);
         return 'Medicina borrada';

@@ -2,7 +2,7 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Shedules } from './shedules.entity';
-import { newShed, updatShed } from './shedelus.dto';
+import { newShed, updateS } from './shedelus.dto';
 import { Medicina } from '../medications/medications.entity';
 import { Users } from '../users/users.entity';
 
@@ -41,22 +41,25 @@ export class ShedulesService {
             relations: ['medicina', 'users', 'notifications'],
         });
         if (!shedules) {
-            throw new NotFoundException(`Shedules with id ${id} not found`);
+            throw new NotFoundException(`Shedules con id ${id} no encontrada`);
         }
         return shedules;
     }
 
-    // async updateS(id: number, shed: updatShed) {
-    //     const updateResult = await this.sRepository.update(id, shed);
-    //     if (updateResult.affected === 0) {
-    //         throw new NotFoundException(`Shedules with id ${id} not found`);
-    //     }
-    // }
+    async updateS(id: number, shed: updateS): Promise<Shedules> {
+        const existingShedules = await this.sRepository.findOne({ where: { id } });
+        if (!existingShedules) {
+            throw new NotFoundException(`Shedules con id ${id} no encontrada`);
+        }
+
+        const updatedShedules = Object.assign(existingShedules, shed);
+        return await this.sRepository.save(updatedShedules);
+    }
 
     async deleteS(id: number): Promise<string> {
         const shedules = await this.sRepository.findOne({ where: { id } });
         if (!shedules) {
-            throw new NotFoundException(`Shedules with id ${id} not found`);
+            throw new NotFoundException(`Shedules con id ${id} no encontrada`);
         }
 
         await this.sRepository.delete(id);

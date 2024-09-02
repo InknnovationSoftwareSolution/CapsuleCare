@@ -37,7 +37,7 @@ describe('MedicationsService - Create', () => {
       const dto: Newmedicina = { name: 'Medicine', quantity: 10, user: 1 };
       const med: Medicina = {
           id: 1, ...dto, user: { id: 1 } as any,
-          shedules: []
+          schedules: []
       };
 
       mockMedicationsRepository.save.mockResolvedValue(med);

@@ -1,15 +1,16 @@
-import { Body, Controller, Delete, Get, Param, ParseIntPipe, Patch, Post, UseGuards  } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, ParseIntPipe, Patch, Post, Put, UseGuards } from '@nestjs/common';
 import { ShedulesService } from './shedules.service';
-import { newShed, updatShed } from './shedelus.dto';
+import { newShed, updateS } from './shedelus.dto';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
+import { Shedules } from './shedules.entity';
 
 @UseGuards(JwtAuthGuard)
 @Controller('shedules')
 export class ShedulesController {
-    constructor(private readonly shedulesService: ShedulesService) {}
+    constructor(private readonly shedulesService: ShedulesService) { }
 
     @Post()
-    create(@Body() newShed: newShed) {
+    async createS(@Body() newShed: newShed): Promise<Shedules> {
         return this.shedulesService.createS(newShed);
     }
 
@@ -23,10 +24,11 @@ export class ShedulesController {
         return this.shedulesService.findShedules(id);
     }
 
-    // @Patch(':id')
-    // update(@Param('id', ParseIntPipe) id: number, @Body() updateShed: updatShed) {
-    //     return this.shedulesService(id, updateShed);
-    // }
+    @Put(':id')
+    updateS(@Param('id', ParseIntPipe) id: number,
+        @Body() updateData: updateS) {
+        return this.shedulesService.updateS(id, updateData);
+    }
 
     @Delete(':id')
     delete(@Param('id', ParseIntPipe) id: number) {

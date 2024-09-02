@@ -3,6 +3,8 @@ import { INestApplication } from '@nestjs/common';
 import * as request from 'supertest';
 import { AppModule } from '../src/app.module';
 
+jest.setTimeout(10000);
+
 describe('Medications E2E Test', () => {
   let app: INestApplication;
   let jwtToken: string;
@@ -16,7 +18,7 @@ describe('Medications E2E Test', () => {
     app = moduleRef.createNestApplication();
     await app.init();
 
-    jwtToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImFkbWluQGdtYWlsLmNvbSIsInN1YiI6NCwiaWF0IjoxNzI0ODAxMDE2LCJleHAiOjE3MjQ4MDQ2MTZ9.S_WMmOLgVBhfD3avXD2nYN5zWWWfiyaIda0LpFtqsYc';
+    jwtToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImFkbWluQGV4YW1wbGUuY29tIiwic3ViIjo1LCJpYXQiOjE3MjUyNTkzMjksImV4cCI6MTcyNTI2MjkyOX0.33SE6U8z9EtQwDwYD11Hd-aICVHVvHPN78FRBdefCGg';
   });
 
   it('POST: /medications should create a medication and return it', async () => {
@@ -26,7 +28,7 @@ describe('Medications E2E Test', () => {
       .send({
         name: 'Paracetamol',
         quantity: 20,
-        user: 1,
+        user: 5,
       })
       .expect(201);
 
@@ -62,7 +64,7 @@ describe('Medications E2E Test', () => {
       .set('Authorization', `Bearer ${jwtToken}`)
       .send({
         name: 'Ibuprofeno',
-        quantity: 10,
+        quantity: 20,
       })
       .expect(200);
   
@@ -72,7 +74,7 @@ describe('Medications E2E Test', () => {
       .expect(200);
   
     expect(response.body.name).toEqual('Ibuprofeno');
-    expect(response.body.quantity).toEqual(10);
+    expect(response.body.quantity).toEqual(20);
   });
   
 
@@ -89,6 +91,8 @@ describe('Medications E2E Test', () => {
   });
 
   afterAll(async () => {
-    await app.close();
+    if (app) {
+      await app.close();
+    }
   });
 });
