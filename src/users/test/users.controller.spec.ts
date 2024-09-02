@@ -72,7 +72,7 @@ describe('UsersController', () => {
     });
   });
 
-  describe('Find', () => {
+  describe('find', () => {
     it('should return an array of users', async () => {
       const users: Users[] = [
         {
